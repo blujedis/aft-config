@@ -1,0 +1,157 @@
+{
+	"name": "primor-config",
+	"version": "0.0.0-development",
+	"description": "Configuration defaults and utils for Primor.",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/types/index.d.ts",
+	"exports": {
+		".": {
+			"require": "./dist/index.js",
+			"import": "./dist/index.mjs",
+			"types": "./dist/types/index.d.ts"
+		}
+	},
+	"keywords": [
+		"primor",
+		"tailwind",
+		"svelte",
+		"components"
+	],
+	"files": [
+		"dist",
+		"docs"
+	],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/blujedis/primor-config"
+	},
+	"bugs": {
+		"url": "https://github.com/blujedis/primor-config/issues"
+	},
+	"homepage": "https://github.com/blujedis/primor-config#readme",
+	"author": {
+		"name": "Blujedis",
+		"url": "https://github.com/blujedis"
+	},
+	"scripts": {
+		"clean": "rimraf dist/",
+		"build": "npm run clean && tsup && npm run types",
+		"types": "tsc --emitDeclarationOnly",
+		"types:watch": "tsc --emitDeclarationOnly -w",
+		"dev": "tsup --watch src",
+		"docs": "rimraf docs/ && typedoc src/index.ts && touch ./docs/.nojekyll",
+		"prepare": "husky install",
+		"prepublishOnly": "npm run build && npm run docs",
+		"semantic-release": "semantic-release --branches main",
+		"format": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
+		"lint": "eslint --ignore-path .gitignore . --ext .js,.jsx,.ts,.tsx",
+		"lint:fix": "npm run lint -- --fix",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"test": "echo \"Warn: no test specified in primor-config\""
+	},
+	"dependencies": {
+		"lodash.merge": "^4.6.2",
+		"lodash.unset": "^4.5.2"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^17.0.3",
+		"@commitlint/config-conventional": "^17.0.3",
+		"@semantic-release/changelog": "^6.0.1",
+		"@semantic-release/commit-analyzer": "^9.0.2",
+		"@semantic-release/git": "^10.0.1",
+		"@semantic-release/npm": "^9.0.1",
+		"@semantic-release/release-notes-generator": "^10.0.3",
+		"@types/lodash.merge": "^4.6.7",
+		"@types/lodash.unset": "^4.5.7",
+		"@types/node": "^15.0.1",
+		"@typescript-eslint/eslint-plugin": "^5.30.5",
+		"@typescript-eslint/parser": "^5.30.5",
+		"eslint": "^8.19.0",
+		"husky": "^8.0.1",
+		"prettier": "^2.2.1",
+		"pretty-quick": "^3.1.3",
+		"rimraf": "^3.0.2",
+		"semantic-release": "^19.0.3",
+		"svelte": "^3.50.1",
+		"svelte-check": "^2.9.0",
+		"tsup": "^6.2.3",
+		"typedoc": "^0.23.15",
+		"typescript": "^4.8.3",
+		"tslib": "^2.4.0",
+		"svelte2tsx": "^0.5.18"
+	},
+	"peerDependencies": {
+		"svelte": ">=3.x"
+	},
+	"tsup": {
+		"entry": [
+			"src/index.ts"
+		],
+		"splitting": false,
+		"sourcemap": true,
+		"clean": true,
+		"dts": false,
+		"treeshake": true,
+		"format": [
+			"cjs",
+			"esm"
+		],
+		"external": [
+			"svelte2tsx/svelte-jsx"
+		]
+	},
+	"publishConfig": {
+		"registry": "https://registry.npmjs.org",
+		"tag": "latest"
+	},
+	"release": {
+		"branches": [
+			"main"
+		],
+		"plugins": [
+			[
+				"@semantic-release/commit-analyzer",
+				{
+					"releaseRules": [
+						{
+							"type": "docs",
+							"scope": "README*",
+							"release": "patch"
+						}
+					]
+				}
+			],
+			"@semantic-release/release-notes-generator",
+			[
+				"@semantic-release/npm",
+				{
+					"npmPublish": true
+				}
+			],
+			"@semantic-release/changelog",
+			"@semantic-release/git"
+		]
+	},
+	"jest": {
+		"transform": {
+			"^.+\\.svelte$": [
+				"svelte-jester",
+				{
+					"preprocess": true
+				}
+			],
+			"^.+\\.ts$": "ts-jest"
+		},
+		"moduleFileExtensions": [
+			"js",
+			"ts",
+			"svelte"
+		],
+		"testEnvironment": "jsdom",
+		"setupFilesAfterEnv": [
+			"@testing-library/jest-dom/extend-expect"
+		]
+	}
+}
