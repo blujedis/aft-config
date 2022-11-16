@@ -2,6 +2,6 @@
 	"$schema": "https://typedoc.org/schema.json",
 	"entryPoints": ["./src/index.ts"],
 	"out": "./docs",
-	"name": "Primor Config",
+	"name": "Forewind Util",
 	"readme": "none"
 }

@@ -1,7 +1,7 @@
 {
 	"name": "@forewind/util",
 	"version": "0.0.0-development",
-	"description": "Configuration defaults and utils for Primor.",
+	"description": "Configuration defaults and utils for Forewind.",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/types/index.d.ts",
@@ -40,12 +40,12 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/blujedis/primor-config"
+		"url": "https://github.com/blujedis/forewind-util"
 	},
 	"bugs": {
-		"url": "https://github.com/blujedis/primor-config/issues"
+		"url": "https://github.com/blujedis/forewind-util/issues"
 	},
-	"homepage": "https://github.com/blujedis/primor-config#readme",
+	"homepage": "https://github.com/blujedis/forewind-util#readme",
 	"author": {
 		"name": "Blujedis",
 		"url": "https://github.com/blujedis"
@@ -65,7 +65,7 @@
 		"lint": "eslint --ignore-path .gitignore . --ext .js,.jsx,.ts,.tsx",
 		"lint:fix": "npm run lint -- --fix",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
-		"test": "echo \"Warn: no test specified in primor-config\""
+		"test": "echo \"Warn: no test specified in @forewind/util\""
 	},
 	"dependencies": {
 		"dot-prop": "^7.2.0",
