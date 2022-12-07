@@ -257,4 +257,14 @@ export class Builder<
 		if (!tailwindPurge) return classes;
 		return mergeTailwind(...classes.split(' '));
 	}
+
+	/**
+	 * Clones the current builder returning new instance.
+	 */
+	clone() {
+		const features = structuredClone(this.features) as typeof this.features;
+		const palette = structuredClone(this.palette) as typeof this.palette;
+		return new Builder(features, palette);
+	}
+
 }
