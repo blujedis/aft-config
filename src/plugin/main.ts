@@ -124,7 +124,8 @@ function configHandler(options = {} as PluginOptions) {
 					'1.25': '0.375rem'
 				},
 				fontSize: {
-					md: ['1rem', { lineHeight: '1.5rem' }]
+					xxs: ['0.625rem', { lineHeight: '0.875rem' }],
+					md: ['1rem', { lineHeight: '1.5rem' }],
 				}
 			}
 		}

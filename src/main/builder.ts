@@ -40,34 +40,20 @@ export class Builder<
 	}
 
 	/**
-	 * Cleans props from object, by default removes $$slots and
-	 * $$scope from $$Props if they exist.
-	 */
-	cleanProps<T extends Record<string, any>>(props: T): Required<T>;
-
-	/**
-	 * Cleans props from object, by default removes $$slots and
-	 * $$scope from $$Props if they exist.
+	 * Cleans props from object, removes $$slots and
+	 * $$scope from $$Props if exist.
 	 *
 	 * @param props the props to be cleaned.
+	 * @param defaults the default values to be merged.
 	 */
-	cleanProps<T extends Record<string, any>, K extends keyof T>(
+	prepareProps<T extends Record<string, any>>(
 		props: T,
-		...keys: K[]
-	): Required<Pick<T, Exclude<keyof T, K>>>;
-
-	cleanProps<T extends Record<string, any>, K extends keyof T>(
-		props: T,
-		...keys: K[]
+		defaults = {} as Partial<T>
 	) {
-		keys = ['$$slots' as K, '$$scope' as K, ...keys];
-		return Object.entries(props).reduce((result, [k, v]) => {
-			if (keys.includes(k as K)) return result;
-			result[k as keyof typeof result] = v;
-			return result;
-		}, {} as Pick<T, Exclude<keyof T, K>>);
-		// keys.forEach(k => delete props[k]);
-		// return props as Pick<T, Exclude<keyof T, K>>;
+		props = { ...defaults, ...props };
+		delete props['$$slots'];
+		delete props['$$scope'];
+		return props as Required<T>;
 	}
 
 	/**
@@ -85,7 +71,7 @@ export class Builder<
 	 * @param defaults the default values for the props.
 	 */
 	defaults<E extends keyof F = never, R extends keyof F = never>(
-		defaults: Partial<TypedDefaults<F>>,
+		defaults = {} as Partial<TypedDefaults<F>>,
 		exclude = [] as E[],
 		required = [] as Exclude<R, E>[]
 	) {
@@ -154,7 +140,7 @@ export class Builder<
 		if (!when) return this;
 		const handler = this.features[key] as LookupHandler<F[K]>;
 		const result = handler(...args);
-		this.featureClasses = [...this.featureClasses, result];
+		this.userClasses = [result, ...this.userClasses]; // ensure userClasses are last.
 		return this;
 	}
 
@@ -185,7 +171,7 @@ export class Builder<
 	 */
 	addVariant<K extends keyof V, V = F['variant']>(
 		variant: TypeOrValue<K>,
-		theme?: TypeOrValue<FeaturesTheme<Required<V> & Record<keyof V, V[keyof V]>, K>>
+		theme = 'default' as TypeOrValue<FeaturesTheme<Required<V> & Record<keyof V, V[keyof V]>, K>>
 	) {
 		try {
 			const variants = (this.features['variant'] || {}) as Record<
@@ -202,9 +188,10 @@ export class Builder<
 			if (theme) {
 				const themeConf = varConf.themes[theme as keyof typeof varConf];
 				themeClasses.push(themeConf || '');
-			} else {
-				themeClasses.push(varConf.default || ''); // default class styling.
 			}
+			// else {
+			// themeClasses.push(varConf.default || ''); // default class styling.
+			// }
 			this.themeClasses = themeClasses;
 			this.themeFilters = [...this.themeFilters, ...ensureArray(varConf.filters)];
 		} catch (ex) {
@@ -257,4 +244,14 @@ export class Builder<
 		if (!tailwindPurge) return classes;
 		return mergeTailwind(...classes.split(' '));
 	}
+
+	/**
+	 * Clones to a new instance of Builder.
+	 */
+	clone() {
+		const features = { ...this.features };
+		const palette = { ...this.palette } as P;
+		return new Builder(features, palette);
+	}
+
 }

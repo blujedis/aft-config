@@ -197,7 +197,7 @@ export function pick<T extends Record<string, any>, K extends Path<T>>(
  * @param keys the nested keys to be picked.
  */
 export function pickVariant<
-	T extends Record<keyof Palette, Record<string, any>>,
+	T extends Record<keyof Palette | 'default', Record<string, any>>,
 	K extends Path<T['primary']>
 >(obj: T, ...keys: (K | Path<T['primary']>)[]) {
 	const result = {} as any;
@@ -215,7 +215,7 @@ export function pickVariant<
 			}
 		}
 	});
-	return result as Record<keyof Palette, Record<string, any>>;
+	return result as Record<keyof Palette | 'default', Record<string, any>>;
 }
 
 /**
@@ -313,7 +313,7 @@ export function normalize<F extends Features, P extends Palette>(
 	for (const k in features.variant) {
 		features.variant[k] = {
 			base: '',
-			default: '',
+			// default: '',
 			filters: [],
 			themes: {},
 			...features.variant[k]

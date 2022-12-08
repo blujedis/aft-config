@@ -21,18 +21,18 @@ export type RequiredProps<T, K extends keyof T> = Pick<Required<T>, K> &
 
 export type DeepPartial<T extends Record<string, any>> = {
 	[K in keyof T]?: T[K] extends Array<any>
-		? T[K]
-		: T[K] extends object
-		? DeepPartial<T[K]>
-		: T[K];
+	? T[K]
+	: T[K] extends object
+	? DeepPartial<T[K]>
+	: T[K];
 };
 
 export type NestedKey<O> = {
 	[K in Extract<keyof O, string>]: O[K] extends Array<any>
-		? K
-		: O[K] extends Record<string, unknown>
-		? `${K}` | `${K}.${NestedKey<O[K]>}`
-		: K;
+	? K
+	: O[K] extends Record<string, unknown>
+	? `${K}` | `${K}.${NestedKey<O[K]>}`
+	: K;
 }[Extract<keyof O, string>];
 
 type UnDot<T extends string> = T extends `${infer A}.${infer B}`
@@ -48,20 +48,18 @@ type Tail<T extends any[]> = ((...t: T) => void) extends (
 
 type DeepOmitBase<T, Path extends string[]> = T extends object
 	? Path['length'] extends 1
-		? Omit<T, Path[0]>
-		: {
-				[K in keyof T]: K extends Path[0] ? DeepOmitBase<T[K], Tail<Path>> : T[K];
-		  }
+	? Omit<T, Path[0]>
+	: { [K in keyof T]: K extends Path[0] ? DeepOmitBase<T[K], Tail<Path>> : T[K]; }
 	: T;
 
 export type DeepOmit<T, Path extends NestedKey<T>> = DeepOmitBase<T, UnDot<Path>>;
 
 export type ParsePath<T, Key extends keyof T> = Key extends string
 	? T[Key] extends Record<string, any>
-		?
-				| `${Key}.${ParsePath<T[Key], Exclude<keyof T[Key], keyof any[]>> & string}`
-				| `${Key}.${Exclude<keyof T[Key], keyof any[]> & string}`
-		: never
+	?
+	| `${Key}.${ParsePath<T[Key], Exclude<keyof T[Key], keyof any[]>> & string}`
+	| `${Key}.${Exclude<keyof T[Key], keyof any[]> & string}`
+	: never
 	: never;
 
 export type ParsePathKey<T> = ParsePath<T, keyof T> | keyof T;
@@ -72,10 +70,10 @@ export type Path<T> = ParsePathKey<T> extends string | keyof T
 
 export type PathValue<T, P extends Path<T>> = P extends `${infer Key}.${infer Rest}`
 	? Key extends keyof T
-		? Rest extends Path<T[Key]>
-			? PathValue<T[Key], Rest>
-			: never
-		: never
+	? Rest extends Path<T[Key]>
+	? PathValue<T[Key], Rest>
+	: never
+	: never
 	: P extends keyof T
 	? T[P]
 	: never;
@@ -149,7 +147,7 @@ export type VariantThemes = Record<string, string | Record<string, string>>;
 
 export interface Variant {
 	base?: string | Record<string, any>;
-	default?: string | Record<string, any>;
+	// default?: string | Record<string, any>;
 	filters?: string | RegExp | (string | RegExp)[];
 	themes?: VariantThemes;
 }
@@ -163,8 +161,8 @@ export type FeaturesDefined<
 	VKey extends keyof Required<F['variant']> = keyof Required<F['variant']>
 > = {
 	[P in keyof Required<F>]: F[P] extends (...args: any[]) => any
-		? LookupHandler<F[P]>
-		: F[P];
+	? LookupHandler<F[P]>
+	: F[P];
 } & {
 	variant: Record<VKey, Required<Variant>>;
 };
@@ -178,12 +176,12 @@ export type FeaturesTheme<
 
 type TypedDefaultsBase<F extends Record<string, any>> = {
 	[P in keyof F]: F[P] extends (...args: any) => any
-		? boolean
-		: F[P] extends readonly any[]
-		? TypeOrValue<F[P][number]>
-		: F[P] extends object
-		? TypeOrValue<keyof F[P]>
-		: boolean;
+	? boolean
+	: F[P] extends readonly any[]
+	? TypeOrValue<F[P][number]>
+	: F[P] extends object
+	? TypeOrValue<keyof F[P]>
+	: boolean;
 };
 
 // If no required keys make all optional.
