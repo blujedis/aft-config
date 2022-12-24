@@ -40,34 +40,19 @@ export class Builder<
 	}
 
 	/**
-	 * Cleans props from object, by default removes $$slots and
-	 * $$scope from $$Props if they exist.
-	 */
-	cleanProps<T extends Record<string, any>>(props: T): Required<T>;
-
-	/**
-	 * Cleans props from object, by default removes $$slots and
-	 * $$scope from $$Props if they exist.
+	 * Prepare props removes $$slots and $$scope from $$Props
+	 * merges any default values.
 	 *
 	 * @param props the props to be cleaned.
 	 */
-	cleanProps<T extends Record<string, any>, K extends keyof T>(
+	prepareProps<T extends Record<string, any>, K extends keyof T>(
 		props: T,
-		...keys: K[]
-	): Required<Pick<T, Exclude<keyof T, K>>>;
-
-	cleanProps<T extends Record<string, any>, K extends keyof T>(
-		props: T,
-		...keys: K[]
+		defaults = {} as Partial<T>
 	) {
-		keys = ['$$slots' as K, '$$scope' as K, ...keys];
-		return Object.entries(props).reduce((result, [k, v]) => {
-			if (keys.includes(k as K)) return result;
-			result[k as keyof typeof result] = v;
-			return result;
-		}, {} as Pick<T, Exclude<keyof T, K>>);
-		// keys.forEach(k => delete props[k]);
-		// return props as Pick<T, Exclude<keyof T, K>>;
+		props = { ...defaults, ...props };
+		delete props['$$slots'];
+		delete props['$$scope'];
+		return props as Required<T>;
 	}
 
 	/**
