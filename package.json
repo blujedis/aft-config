@@ -2,14 +2,14 @@
 	"name": "@forewind/util",
 	"version": "0.0.0-development",
 	"description": "Configuration defaults and utils for Forewind.",
-	"main": "./dist/index.js",
-	"module": "./dist/index.mjs",
-	"types": "./dist/types/index.d.ts",
+	"main": "./dist/main/index.js",
+	"module": "./dist/main/index.mjs",
+	"types": "./dist/types/main/index.d.ts",
 	"exports": {
 		".": {
-			"require": "./dist/index.js",
-			"import": "./dist/index.mjs",
-			"types": "./dist/types/index.d.ts"
+			"require": "./dist/main/index.js",
+			"import": "./dist/main/index.mjs",
+			"types": "./dist/types/main/index.d.ts"
 		},
 		"./plugin": {
 			"require": "./dist/plugin/index.js",
@@ -103,7 +103,7 @@
 	},
 	"tsup": {
 		"entry": [
-			"src/index.ts",
+			"src/main/index.ts",
 			"src/browser/mode.src.ts",
 			"src/plugin/index.ts"
 		],

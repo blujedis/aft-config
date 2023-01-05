@@ -2,8 +2,8 @@
 // https://github.com/mbitson/mcg/blob/c484a34a4f670d75b7a0824bbdc9945703e3a4f8/scripts/controllers/ColorGeneratorCtrl.js
 
 import tinycolor from 'tinycolor2';
-import { shades } from '../main/palette';
-import type { Shade, PaletteInit } from '../types';
+import { shades } from './palette';
+import type { Shade, PaletteInit } from './types';
 
 type RGB = { b: number; g: number; r: number };
 
@@ -38,9 +38,10 @@ function buildPaletteByVarColor(varColor: string) {
 }
 
 function buildPalette(hex: string) {
-	const varColorMatch = hex.match(/var\((?<color>[^)]+)/) || [];
 
-	if (typeof varColorMatch !== 'undefined' && varColorMatch.groups) {
+	const varColorMatch = hex.match(/var\((?<color>[^)]+)/) as RegExpMatchArray;
+
+	if (varColorMatch && varColorMatch?.groups) {
 		if (!varColorMatch.groups['color'])
 			throw new Error(`Invalid color match group.`);
 		return {
@@ -117,11 +118,12 @@ export function genThemeVars<T extends PaletteInit>(
 	palette: T,
 	prefix?: string
 ): Record<keyof T, Record<Shade | 'DEFAULT', string>>;
+
 export function genThemeVars(
 	values: Record<string, any> | string[],
 	prefix = 'color'
 ) {
-	// Normalize prefix incase user passes --color etc.
+	// Normalize prefix in case user passes --color etc.
 	prefix = prefix.replace(/^--/, '');
 	const cssvars = {} as any;
 	const keys =
