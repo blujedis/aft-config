@@ -4,10 +4,13 @@ import { defaultPalette } from '../main/palette';
 import { Config, PluginAPI } from 'tailwindcss/types/config';
 import { join, relative } from 'path';
 import { createWriteStream } from 'fs';
-import type { PluginOptions, PluginOutput, Palette } from '../types';
+import type { PluginOptions, PluginOutput,  PaletteLike } from './types';
 
 const cwd = process.cwd();
 const createPlugin = tailwindPlugin.withOptions;
+
+let hasOutput = false;
+let prevOutput = false;
 
 function getPath(
 	name: string,
@@ -25,7 +28,8 @@ function getPath(
  * @param palette the palette to be output to file.
  * @param outdir the path to output the file to.
  */
-function outputPalette(palette: Palette, options: PluginOutput) {
+function outputPalette(source: PaletteLike, palette: PaletteLike, options: PluginOutput) {
+
 	if (!options.outdir) return;
 
 	const outpath = getPath('palette', options.outdir, options.outext);
@@ -33,10 +37,17 @@ function outputPalette(palette: Palette, options: PluginOutput) {
 	if (!outpath) return;
 
 	let output = JSON.stringify(palette, null, 2);
+	let sourceOutput = JSON.stringify(source, null, 2);
 
 	if (options.outtype === 'cjs') output = `module.exports = ` + output + ';\n';
 	else if (options.outtype !== 'json')
 		output = 'const palette = ' + output + ';\n\nexport default palette;';
+
+	if (options.outtype === 'cjs') output = `exports.source = ` + sourceOutput + ';\n';
+	else if (options.outtype !== 'json')
+		sourceOutput = 'export const source = ' + sourceOutput + ';\n';
+
+	output = options.inclsrc ? sourceOutput + '\n' + output : output;
 
 	const ws = createWriteStream(outpath);
 	const buffer = Buffer.from(output, 'utf-8');
@@ -48,17 +59,20 @@ function outputPalette(palette: Palette, options: PluginOutput) {
 	});
 
 	ws.on('close', () => {
-		if (hasError)
+		if (hasError) {
 			process.stdout.write(
 				`  \u001b[31m✖\u001b[0m  Forewind: palette output FAILED: "${outpath}"\n`
 			);
-		else
+		}
+		else {
 			process.stdout.write(
 				`  \u001b[32;1m➜\u001b[0m  Forewind: palette output: "${relative(
 					cwd,
 					outpath
 				)}"\n`
 			);
+		}
+
 	});
 
 	ws.write(buffer);
@@ -91,41 +105,41 @@ function configHandler(options = {} as PluginOptions) {
 		prefix: 'color',
 		outtype: 'json',
 		output: true,
+		inclsrc: false,
 		colors: { ...defaultPalette },
 		...options
 	};
 
-	const { colors, output, dynamic, prefix, outdir, outext, outtype } =
+	const { colors, output, dynamic, prefix, outdir, outext, outtype, inclsrc } =
 		options as Required<PluginOptions>;
 
-	// Generate color palette for each theme color.
-	const themeColors = genPalette(colors);
+	// Generate source color palette for each theme color.
+	const sourceColors = genPalette(colors);
 
-	let varColors = { ...themeColors };
+	// Theme colors may be clone or generated as dynamic css variables in next step.
+	let themeColors = { ...sourceColors };
 
 	// Generate them vars ex: var(--color-primary)
-	if (dynamic) varColors = genThemeVars(themeColors, prefix);
+	if (dynamic) themeColors = genThemeVars(themeColors, prefix);
 
-	if (output) outputPalette(themeColors, { outdir, outext, outtype });
+	const shouldOutput = (output && !hasOutput) 
+		|| (hasOutput && output && !prevOutput);
+
+	prevOutput = output;
+
+	// If output is enabled and not already output, write the palette to file.
+	// Or if has output the palette but output status has changed to true, previous false
+	// the write to file.
+	if (shouldOutput) {
+		outputPalette(colors as PaletteLike, {...sourceColors}, { outdir, outext, outtype, inclsrc });
+		hasOutput = true;
+	}
 
 	const config = {
 		darkMode: 'class',
 		theme: {
 			extend: {
 				colors: themeColors,
-				padding: {
-					'0.25': '0.0625rem',
-					'0.75': '0.1875rem',
-					'1.25': '0.375rem'
-				},
-				margin: {
-					'0.25': '0.0625rem',
-					'0.75': '0.1875rem',
-					'1.25': '0.375rem'
-				},
-				fontSize: {
-					md: ['1rem', { lineHeight: '1.5rem' }]
-				}
 			}
 		}
 	} as Partial<Config>;
