@@ -4,7 +4,7 @@ import { defaultPalette } from '../main/palette';
 import { Config, PluginAPI } from 'tailwindcss/types/config';
 import { join, relative } from 'path';
 import { createWriteStream } from 'fs';
-import type { PluginOptions, PluginOutput,  PaletteLike } from './types';
+import type { PluginOptions, PluginOutput, PaletteLike } from './types';
 
 const cwd = process.cwd();
 const createPlugin = tailwindPlugin.withOptions;
@@ -32,7 +32,7 @@ function outputPalette(source: PaletteLike, palette: PaletteLike, options: Plugi
 
 	if (!options.outdir) return;
 
-	const outpath = getPath('palette', options.outdir, options.outext);
+	const outpath = getPath(options.outname || 'palette', options.outdir, options.outext);
 
 	if (!outpath) return;
 
@@ -47,7 +47,7 @@ function outputPalette(source: PaletteLike, palette: PaletteLike, options: Plugi
 	else if (options.outtype !== 'json')
 		sourceOutput = 'export const source = ' + sourceOutput + ';\n';
 
-	output = options.inclsrc ? sourceOutput + '\n' + output : output;
+	output = options.outsrc ? sourceOutput + '\n' + output : output;
 
 	const ws = createWriteStream(outpath);
 	const buffer = Buffer.from(output, 'utf-8');
@@ -105,12 +105,12 @@ function configHandler(options = {} as PluginOptions) {
 		prefix: 'color',
 		outtype: 'json',
 		output: true,
-		inclsrc: false,
+		outsrc: false,
 		colors: { ...defaultPalette },
 		...options
 	};
 
-	const { colors, output, dynamic, prefix, outdir, outext, outtype, inclsrc } =
+	const { colors, output, dynamic, prefix, outdir, outext, outtype, outsrc, outname } =
 		options as Required<PluginOptions>;
 
 	// Generate source color palette for each theme color.
@@ -122,7 +122,7 @@ function configHandler(options = {} as PluginOptions) {
 	// Generate them vars ex: var(--color-primary)
 	if (dynamic) themeColors = genThemeVars(themeColors, prefix);
 
-	const shouldOutput = (output && !hasOutput) 
+	const shouldOutput = (output && !hasOutput)
 		|| (hasOutput && output && !prevOutput);
 
 	prevOutput = output;
@@ -131,7 +131,7 @@ function configHandler(options = {} as PluginOptions) {
 	// Or if has output the palette but output status has changed to true, previous false
 	// the write to file.
 	if (shouldOutput) {
-		outputPalette(colors as PaletteLike, {...sourceColors}, { outdir, outext, outtype, inclsrc });
+		outputPalette(colors as PaletteLike, { ...sourceColors }, { outdir, outext, outtype, outsrc, outname });
 		hasOutput = true;
 	}
 

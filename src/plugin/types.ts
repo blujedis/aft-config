@@ -14,10 +14,11 @@ export type Shade = typeof shades[number];
 
 export interface PluginOutput {
 	outdir?: string | boolean;
+	outname?: string;
 	outtype?: 'esm' | 'cjs' | 'json';
 	outext?: 'js' | 'cjs' | 'mjs' | 'ts' | 'json';
 	output?: boolean;
-	inclsrc?: boolean;
+	outsrc?: boolean;
 }
 
 export interface PluginOptions extends PluginOutput {
