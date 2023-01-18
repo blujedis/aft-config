@@ -1,12 +1,10 @@
-import type { shades, defaultPalette } from './palette';
+import type { shades } from './palette';
 
 export type Shade = typeof shades[number];
 
-export type DefaultKeys = keyof typeof defaultPalette;
-
 export type PaletteColor = Partial<Record<Shade | 'DEFAULT', string>>;
 
-export type PaletteInit = Record<DefaultKeys, string | Partial<PaletteColor>>;
+export type PaletteInit = Record<string, string | Partial<PaletteColor>>;
 
 export type Palette<T extends PaletteInit = PaletteInit> = Record<
 	keyof T,
@@ -22,7 +20,7 @@ const windowLoaded = typeof window !== 'undefined';
 const TOKEN = '__forewind_init__';
 
 export function useVars<
-	T extends Record<keyof PaletteInit, PaletteColor>,
+	T extends Record<keyof PaletteInit | string, PaletteColor>,
 	P extends string = 'color'
 >(initPalette: Palette<T>, prefix = 'color' as P) {
 	const api = {
