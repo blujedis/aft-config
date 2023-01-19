@@ -132,28 +132,43 @@ export function genThemeVars(
 		.filter((v) => typeof v !== 'undefined')
 		.forEach((c) => {
 			cssvars[c] = {} as any;
-			cssvars[c].DEFAULT = `var(--${prefix}-${c as string})`;
+			cssvars[c].DEFAULT = `rgb(var(--${prefix}-${c as string})/<alpha-value>)`;
 			shades.forEach((s) => {
-				cssvars[c][s] = `var(--${prefix}-${c as string}-${s})`;
+				cssvars[c][s] = `rgb(var(--${prefix}-${c as string}-${s})/<alpha-value>)`;
 			});
 		});
 	return cssvars as Record<string, Record<string, string>>;
 }
 
+function getRgbChannels(color: string) {
+	const c = tinycolor(color).toRgb();
+	console.log(color);
+	console.log(c);
+	return `${c.r} ${c.g} ${c.b}`;
+}
+
 /**
  * Generates and flattens variables for :root.
+ *  "RGBA(xxx, xxx, xxx, xx)".
  *
  * @param palette the palette to generate vars for.
+ * @param isDynamic when true root values are channels instead of hex string.
  * @param prefix the prefix for example --color.
  */
-export function genRootVars<T extends PaletteInit>(palette: T, prefix = 'color') {
+export function genRootVars<T extends PaletteInit>(palette: T, isDynamic = false, prefix = 'color') {
 	prefix = prefix.replace(/^--/, '');
 	return Object.entries(palette).reduce((a, [color, conf]) => {
-		if (typeof conf === 'string') a[`--${prefix}-${color}`] = conf;
+		if (typeof conf === 'string') {
+			a[`--${prefix}-${color}`] = isDynamic ? getRgbChannels(conf) : conf;
+		}
 		else
 			Object.entries(conf).forEach(([shade, value]) => {
-				if (shade.toLowerCase() === 'default') a[`--${prefix}-${color}`] = value;
-				else a[`--${prefix}-${color}-${shade}`] = value;
+				if (shade.toLowerCase() === 'default') {
+					a[`--${prefix}-${color}`] = isDynamic ? getRgbChannels(value) : value;
+				}
+				else {
+					a[`--${prefix}-${color}-${shade}`] = isDynamic ? getRgbChannels(value) : value;
+				}
 			});
 		return a;
 	}, {} as Record<string, string>);

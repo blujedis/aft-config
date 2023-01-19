@@ -87,10 +87,16 @@ function createExtendHandler(options = {} as PluginOptions) {
 		const { inherit, current, transparent, black, white, ...cleanColors } =
 			allColors;
 		// Generate root variables ex: :root { --color-primary: '#FF0000' }
-		if (options.dynamic)
+		if (options.dynamic) {
+			const rootVars = genRootVars({ ...cleanColors } as any, options.dynamic, options.prefix);
+			// console.log();
+			// console.log(rootVars);
+			// console.log();
 			addBase({
-				':root': genRootVars({ ...cleanColors } as any)
+				':root': rootVars
 			});
+		}
+
 	};
 }
 
@@ -120,7 +126,12 @@ function configHandler(options = {} as PluginOptions) {
 	let themeColors = { ...sourceColors };
 
 	// Generate them vars ex: var(--color-primary)
-	if (dynamic) themeColors = genThemeVars(themeColors, prefix);
+	if (dynamic) {
+		themeColors = genThemeVars(themeColors, prefix);
+		// console.log()
+		// console.log(themeColors);
+		// console.log();
+	}
 
 	const shouldOutput = (output && !hasOutput)
 		|| (hasOutput && output && !prevOutput);
