@@ -1,4 +1,5 @@
 import type { shades } from './palette';
+import Values from 'values.js';
 
 export type Shade = typeof shades[number];
 
@@ -22,7 +23,7 @@ const TOKEN = '__forewind_init__';
 export function useVars<
 	T extends Record<keyof PaletteInit | string, PaletteColor>,
 	P extends string = 'color'
->(initPalette: Palette<T>, prefix = 'color' as P) {
+>(initPalette: Palette<T>, asChannels = false, prefix = 'color' as P) {
 	const api = {
 		add,
 		remove,
@@ -80,6 +81,8 @@ export function useVars<
 		}
 		const key = formatVar(name as string, shade, true);
 		if (typeof value == 'string' && value.length) {
+			if (asChannels)
+				value = new Values(value).rgb.join(' ');
 			document.documentElement.style.setProperty(key, value);
 		}
 	}
@@ -120,11 +123,11 @@ export function useVars<
 	function update(name: string, value: string): void;
 
 	/**
- * Updates a single css variable in the root variables collection.
- * 
- * @param name the name of the css variable to be updated.
- * @param value the value to use for updating.
- */
+	 * Updates a single css variable in the root variables collection.
+	 * 
+	 * @param name the name of the css variable to be updated.
+	 * @param value the value to use for updating.
+	 */
 	function update(name: string, shade: Shade, value: string): void;
 	function update(
 		nameOrPalette?: string | Palette<T> | Partial<Palette<T>>,

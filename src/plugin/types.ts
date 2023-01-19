@@ -22,4 +22,3 @@ export interface PluginOptions extends PluginOutput {
 	prefix?: 'color';
 	colors?: PaletteInit;
 }
-

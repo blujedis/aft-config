@@ -9,6 +9,16 @@ type RGB = { b: number; g: number; r: number };
 
 const excluded = ['white', 'black', 'transparent', 'inherit', 'current'] as const;
 
+/**
+ * Generates simple string of RGB channels without alpha which Tailwind will inject.
+ * 
+ * @param color the color to get RGB channels for.
+ */
+function getRgbChannels(color: tinycolor.ColorInput) {
+	const c = tinycolor(color).toRgb();
+	return `${c.r} ${c.g} ${c.b}`;
+}
+
 function multiply(rgb1: RGB, rgb2: RGB) {
 	rgb1.b = Math.floor((rgb1.b * rgb2.b) / 255);
 	rgb1.g = Math.floor((rgb1.g * rgb2.g) / 255);
@@ -16,65 +26,87 @@ function multiply(rgb1: RGB, rgb2: RGB) {
 	return tinycolor('rgb ' + rgb1.r + ' ' + rgb1.g + ' ' + rgb1.b);
 }
 
-const objectify = (value: tinycolor.ColorInput, name: string) => ({
-	[name]: tinycolor(value).toHexString()
+/**
+ * Creates object of color using name/shade as key name.
+ * 
+ * @param value the value to create color value for.
+ * @param name the name of the color key/shade.
+ * @param rgb when true rgb channels are return instead of hex.
+ */
+const objectify = (value: tinycolor.ColorInput, name: string, rgb = false) => ({
+	[name]: rgb ? getRgbChannels(value) : tinycolor(value).toHexString()
 });
 
 const white = tinycolor('#ffffff');
 
-function buildPaletteByVarColor(varColor: string) {
-	return {
-		'50': `var(${varColor}-50)`,
-		'100': `var(${varColor}-100)`,
-		'200': `var(${varColor}-200)`,
-		'300': `var(${varColor}-300)`,
-		'400': `var(${varColor}-400)`,
-		'500': `var(${varColor}-500)`,
-		'600': `var(${varColor}-600)`,
-		'700': `var(${varColor}-700)`,
-		'800': `var(${varColor}-800)`,
-		'900': `var(${varColor}-900)`
-	};
-}
+// function buildPaletteByVarColor(varColor: string) {
+// 	return {
+// 		'50': `var(${varColor}-50)`,
+// 		'100': `var(${varColor}-100)`,
+// 		'200': `var(${varColor}-200)`,
+// 		'300': `var(${varColor}-300)`,
+// 		'400': `var(${varColor}-400)`,
+// 		'500': `var(${varColor}-500)`,
+// 		'600': `var(${varColor}-600)`,
+// 		'700': `var(${varColor}-700)`,
+// 		'800': `var(${varColor}-800)`,
+// 		'900': `var(${varColor}-900)`
+// 	};
+// }
 
-function buildPalette(hex: string) {
+/**
+ * Builds color palette of color shades.
+ * 
+ * @param value the color value to build palette for.
+ * @param rgb when true create object using rgb channels instead of hex.
+ */
+function buildPalette(value: string, rgb = false) {
 
-	const varColorMatch = hex.match(/var\((?<color>[^)]+)/) as RegExpMatchArray;
+	// const varColorMatch = value.match(/var\((?<color>[^)]+)/) as RegExpMatchArray;
 
-	if (varColorMatch && varColorMatch?.groups) {
-		if (!varColorMatch.groups['color'])
-			throw new Error(`Invalid color match group.`);
-		return {
-			...buildPaletteByVarColor(varColorMatch.groups['color']),
-			DEFAULT: hex
-		};
-	}
+	// Checks if color is in format of var(--color-primary)
+	// if (varColorMatch && varColorMatch?.groups) {
+	// 	if (!varColorMatch.groups['color'])
+	// 		throw new Error(`Invalid color match group.`);
+	// 	return {
+	// 		...buildPaletteByVarColor(varColorMatch.groups['color']),
+	// 		DEFAULT: `var(${varColorMatch.groups['color']}-500)`
+	// 	};
+	// }
 
-	const baseDark = multiply(tinycolor(hex).toRgb(), tinycolor(hex).toRgb());
-	const lightest = objectify(tinycolor.mix(white, hex, 30), '100');
-	const midpoint = objectify(tinycolor.mix(white, hex, 100), '500');
+	const baseDark = multiply(tinycolor(value).toRgb(), tinycolor(value).toRgb());
+
+	// Make lightest/midpoint here so we know below
+	// where both points on in object. Also need to grab
+	// midpoint here for the default.
+	const lightest = objectify(tinycolor.mix(white, value, 30), '100', rgb);
+	const midpoint = objectify(tinycolor.mix(white, value, 100), '500', rgb);
 	const midpointVal = midpoint['500'];
 
 	return {
-		...objectify(tinycolor.mix(white, hex, 12), '50'),
+		...objectify(tinycolor.mix(white, value, 12), '50', rgb),
 		...lightest,
-		...objectify(tinycolor.mix(white, hex, 50), '200'),
-		...objectify(tinycolor.mix(white, hex, 70), '300'),
-		...objectify(tinycolor.mix(white, hex, 85), '400'),
+		...objectify(tinycolor.mix(white, value, 50), '200', rgb),
+		...objectify(tinycolor.mix(white, value, 70), '300', rgb),
+		...objectify(tinycolor.mix(white, value, 85), '400', rgb),
 		...midpoint,
-		...objectify(tinycolor.mix(baseDark, hex, 87), '600'),
-		...objectify(tinycolor.mix(baseDark, hex, 70), '700'),
-		...objectify(tinycolor.mix(baseDark, hex, 54), '800'),
-		...objectify(tinycolor.mix(baseDark, hex, 25), '900'),
+		...objectify(tinycolor.mix(baseDark, value, 87), '600', rgb),
+		...objectify(tinycolor.mix(baseDark, value, 70), '700', rgb),
+		...objectify(tinycolor.mix(baseDark, value, 54), '800', rgb),
+		...objectify(tinycolor.mix(baseDark, value, 25), '900', rgb),
 		DEFAULT: midpointVal
 	};
+
 }
 
 /**
  * Generates palette using string or passes provided color palette shades.
+ * 
+ * @param colors the palette of colors can be hex, rgb, we'll normalize.
+ * @param rgb when true output palette will have rgb channels as values instead of hex.
  *
  * @example
- * generateColors({
+ * genPalette({
  *    primary: '#057BFF',  // shades will be generated
  *    danger: {            // shades will be passed as is.
  *    	50: '#fff1f2',
@@ -85,14 +117,14 @@ function buildPalette(hex: string) {
  * });
  *
  */
-export function genPalette<T extends PaletteInit>(colors = {} as T) {
+export function genPalette<T extends PaletteInit>(colors = {} as T, rgb = false) {
 	return Object.entries(colors).reduce((a, [key, val]) => {
 		if (excluded.includes(key as typeof excluded[number]))
 			return { ...a, [key]: val };
 		const newVal =
 			typeof val === 'object' && val !== null
-				? { ...val }
-				: buildPalette(val as any);
+				? { ...val } // assumes already object of shades prolly should be a check for all shades here.
+				: buildPalette(val as any, rgb);
 		return { ...a, [key]: newVal };
 	}, {}) as Record<keyof T, Record<Shade | 'DEFAULT', string>>;
 }
@@ -105,7 +137,8 @@ export function genPalette<T extends PaletteInit>(colors = {} as T) {
  */
 export function genThemeVars<K extends string>(
 	keys: K[],
-	prefix?: string
+	prefix?: string,
+	rgb?: boolean
 ): Record<K, Record<Shade | 'DEFAULT', string>>;
 
 /**
@@ -116,12 +149,14 @@ export function genThemeVars<K extends string>(
  */
 export function genThemeVars<T extends PaletteInit>(
 	palette: T,
-	prefix?: string
+	prefix?: string,
+	rgb?: boolean
 ): Record<keyof T, Record<Shade | 'DEFAULT', string>>;
 
 export function genThemeVars(
 	values: Record<string, any> | string[],
-	prefix = 'color'
+	prefix = 'color',
+	rgb = false
 ) {
 	// Normalize prefix in case user passes --color etc.
 	prefix = prefix.replace(/^--/, '');
@@ -132,42 +167,44 @@ export function genThemeVars(
 		.filter((v) => typeof v !== 'undefined')
 		.forEach((c) => {
 			cssvars[c] = {} as any;
-			cssvars[c].DEFAULT = `rgb(var(--${prefix}-${c as string})/<alpha-value>)`;
-			shades.forEach((s) => {
-				cssvars[c][s] = `rgb(var(--${prefix}-${c as string}-${s})/<alpha-value>)`;
-			});
+			if (rgb) {
+				cssvars[c].DEFAULT = `rgb(var(--${prefix}-${c as string})/<alpha-value>)`;
+				shades.forEach((s) => {
+					cssvars[c][s] = `rgb(var(--${prefix}-${c as string}-${s})/<alpha-value>)`;
+				});
+			}
+			else {
+				cssvars[c].DEFAULT = `var(--${prefix}-${c as string})`;
+				shades.forEach((s) => {
+					cssvars[c][s] = `var(--${prefix}-${c as string}-${s})`;
+				});
+			}
+
 		});
 	return cssvars as Record<string, Record<string, string>>;
 }
 
-function getRgbChannels(color: string) {
-	const c = tinycolor(color).toRgb();
-	console.log(color);
-	console.log(c);
-	return `${c.r} ${c.g} ${c.b}`;
-}
 
 /**
  * Generates and flattens variables for :root.
- *  "RGBA(xxx, xxx, xxx, xx)".
  *
  * @param palette the palette to generate vars for.
- * @param isDynamic when true root values are channels instead of hex string.
+ * @param asChannels when true root values are channels instead of hex string.
  * @param prefix the prefix for example --color.
  */
-export function genRootVars<T extends PaletteInit>(palette: T, isDynamic = false, prefix = 'color') {
+export function genRootVars<T extends PaletteInit>(palette: T, asChannels = true, prefix = 'color') {
 	prefix = prefix.replace(/^--/, '');
 	return Object.entries(palette).reduce((a, [color, conf]) => {
 		if (typeof conf === 'string') {
-			a[`--${prefix}-${color}`] = isDynamic ? getRgbChannels(conf) : conf;
+			a[`--${prefix}-${color}`] = asChannels ? getRgbChannels(conf) : conf;
 		}
 		else
 			Object.entries(conf).forEach(([shade, value]) => {
 				if (shade.toLowerCase() === 'default') {
-					a[`--${prefix}-${color}`] = isDynamic ? getRgbChannels(value) : value;
+					a[`--${prefix}-${color}`] = asChannels ? getRgbChannels(value) : value;
 				}
 				else {
-					a[`--${prefix}-${color}-${shade}`] = isDynamic ? getRgbChannels(value) : value;
+					a[`--${prefix}-${color}-${shade}`] = asChannels ? getRgbChannels(value) : value;
 				}
 			});
 		return a;

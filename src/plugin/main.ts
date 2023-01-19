@@ -86,12 +86,19 @@ function createExtendHandler(options = {} as PluginOptions) {
 		const allColors = theme('colors') as Record<string, any>;
 		const { inherit, current, transparent, black, white, ...cleanColors } =
 			allColors;
-		// Generate root variables ex: :root { --color-primary: '#FF0000' }
+		// When dynamic we need to generate our root css variables
+		// using ONLY RGB channels so opacity works 
+		// example: :root { --color-primary: 21 35 22 }
 		if (options.dynamic) {
-			const rootVars = genRootVars({ ...cleanColors } as any, options.dynamic, options.prefix);
-			// console.log();
-			// console.log(rootVars);
-			// console.log();
+
+			// Because set our colors as var(--color-primary) we have to relookup 
+			// our source colors to generate vars. This is due to how Tailwind's
+			// plugin is designed. We do this by accessing "options.colors"
+			// which were updated in the previous step. We merge with the source colors
+			// with cleaned Tailwind colors temporarily overwriting our var(--color) colors.
+			const mergedColors = { ...cleanColors, ...createExtendHandler.source };
+
+			const rootVars = genRootVars({ ...mergedColors } as any, options.dynamic, options.prefix);
 			addBase({
 				':root': rootVars
 			});
@@ -99,6 +106,8 @@ function createExtendHandler(options = {} as PluginOptions) {
 
 	};
 }
+
+createExtendHandler.source = {} as Record<string, any>;
 
 /**
  * Handler for generating the Tailwind configuration.
@@ -122,16 +131,15 @@ function configHandler(options = {} as PluginOptions) {
 	// Generate source color palette for each theme color.
 	const sourceColors = genPalette(colors);
 
+	// Update colors we'll need this when generating root vars when dynamic.
+	createExtendHandler.source = sourceColors;
+
 	// Theme colors may be clone or generated as dynamic css variables in next step.
 	let themeColors = { ...sourceColors };
 
-	// Generate them vars ex: var(--color-primary)
-	if (dynamic) {
-		themeColors = genThemeVars(themeColors, prefix);
-		// console.log()
-		// console.log(themeColors);
-		// console.log();
-	}
+	// Generate the vars ex: var(--color-primary)
+	if (dynamic)
+		themeColors = genThemeVars(themeColors, prefix, true);
 
 	const shouldOutput = (output && !hasOutput)
 		|| (hasOutput && output && !prevOutput);
@@ -158,7 +166,14 @@ function configHandler(options = {} as PluginOptions) {
 	return config as Config;
 }
 
-export const plugin = createPlugin(
-	(options = {} as PluginOptions) => createExtendHandler(options),
-	configHandler
-);
+// export const plugin = createPlugin(
+// 	(options = {} as PluginOptions) => createExtendHandler(options),
+// 	configHandler
+// );
+
+export const plugin = (options = {} as PluginOptions) => {
+	return createPlugin(
+		() => createExtendHandler(options),
+		() => configHandler(options)
+	);
+}
