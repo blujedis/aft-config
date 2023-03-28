@@ -1,10 +1,13 @@
-import type {  shades } from './palette';
+import type { shades } from './palette';
 
 export type PaletteColor = Partial<Record<Shade | 'DEFAULT', string>>;
 
 export type PaletteInit = Record<string, string | Partial<PaletteColor>>;
 
-export type PaletteLike = Record<string | number, string | Record<string | number, string>>;
+export type PaletteLike = Record<
+	string | number,
+	string | Record<string | number, string>
+>;
 
 export type Shade = typeof shades[number];
 

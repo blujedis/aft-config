@@ -11,7 +11,7 @@ const excluded = ['white', 'black', 'transparent', 'inherit', 'current'] as cons
 
 /**
  * Generates simple string of RGB channels without alpha which Tailwind will inject.
- * 
+ *
  * @param color the color to get RGB channels for.
  */
 function getRgbChannels(color: tinycolor.ColorInput) {
@@ -28,7 +28,7 @@ function multiply(rgb1: RGB, rgb2: RGB) {
 
 /**
  * Creates object of color using name/shade as key name.
- * 
+ *
  * @param value the value to create color value for.
  * @param name the name of the color key/shade.
  * @param rgb when true rgb channels are return instead of hex.
@@ -56,12 +56,11 @@ const white = tinycolor('#ffffff');
 
 /**
  * Builds color palette of color shades.
- * 
+ *
  * @param value the color value to build palette for.
  * @param rgb when true create object using rgb channels instead of hex.
  */
 function buildPalette(value: string, rgb = false) {
-
 	// const varColorMatch = value.match(/var\((?<color>[^)]+)/) as RegExpMatchArray;
 
 	// Checks if color is in format of var(--color-primary)
@@ -96,12 +95,11 @@ function buildPalette(value: string, rgb = false) {
 		...objectify(tinycolor.mix(baseDark, value, 25), '900', rgb),
 		DEFAULT: midpointVal
 	};
-
 }
 
 /**
  * Generates palette using string or passes provided color palette shades.
- * 
+ *
  * @param colors the palette of colors can be hex, rgb, we'll normalize.
  * @param rgb when true output palette will have rgb channels as values instead of hex.
  *
@@ -172,18 +170,15 @@ export function genThemeVars(
 				shades.forEach((s) => {
 					cssvars[c][s] = `rgb(var(--${prefix}-${c as string}-${s})/<alpha-value>)`;
 				});
-			}
-			else {
+			} else {
 				cssvars[c].DEFAULT = `var(--${prefix}-${c as string})`;
 				shades.forEach((s) => {
 					cssvars[c][s] = `var(--${prefix}-${c as string}-${s})`;
 				});
 			}
-
 		});
 	return cssvars as Record<string, Record<string, string>>;
 }
-
 
 /**
  * Generates and flattens variables for :root.
@@ -192,19 +187,23 @@ export function genThemeVars(
  * @param asChannels when true root values are channels instead of hex string.
  * @param prefix the prefix for example --color.
  */
-export function genRootVars<T extends PaletteInit>(palette: T, asChannels = true, prefix = 'color') {
+export function genRootVars<T extends PaletteInit>(
+	palette: T,
+	asChannels = true,
+	prefix = 'color'
+) {
 	prefix = prefix.replace(/^--/, '');
 	return Object.entries(palette).reduce((a, [color, conf]) => {
 		if (typeof conf === 'string') {
 			a[`--${prefix}-${color}`] = asChannels ? getRgbChannels(conf) : conf;
-		}
-		else
+		} else
 			Object.entries(conf).forEach(([shade, value]) => {
 				if (shade.toLowerCase() === 'default') {
 					a[`--${prefix}-${color}`] = asChannels ? getRgbChannels(value) : value;
-				}
-				else {
-					a[`--${prefix}-${color}-${shade}`] = asChannels ? getRgbChannels(value) : value;
+				} else {
+					a[`--${prefix}-${color}-${shade}`] = asChannels
+						? getRgbChannels(value)
+						: value;
 				}
 			});
 		return a;

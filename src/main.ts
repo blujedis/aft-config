@@ -1,6 +1,6 @@
 import tailwindPlugin from 'tailwindcss/plugin';
 import { genPalette, genRootVars, genThemeVars } from './generate';
-import { defaultPalette } from '../main/palette';
+import { defaultPalette } from './palette';
 import { Config, PluginAPI } from 'tailwindcss/types/config';
 import { join, relative } from 'path';
 import { createWriteStream } from 'fs';
@@ -28,11 +28,18 @@ function getPath(
  * @param palette the palette to be output to file.
  * @param outdir the path to output the file to.
  */
-function outputPalette(source: PaletteLike, palette: PaletteLike, options: PluginOutput) {
-
+function outputPalette(
+	source: PaletteLike,
+	palette: PaletteLike,
+	options: PluginOutput
+) {
 	if (!options.outdir) return;
 
-	const outpath = getPath(options.outname || 'palette', options.outdir, options.outext);
+	const outpath = getPath(
+		options.outname || 'palette',
+		options.outdir,
+		options.outext
+	);
 
 	if (!outpath) return;
 
@@ -63,8 +70,7 @@ function outputPalette(source: PaletteLike, palette: PaletteLike, options: Plugi
 			process.stdout.write(
 				`  \u001b[31m✖\u001b[0m  Forewind: palette output FAILED: "${outpath}"\n`
 			);
-		}
-		else {
+		} else {
 			process.stdout.write(
 				`  \u001b[32;1m➜\u001b[0m  Forewind: palette output: "${relative(
 					cwd,
@@ -72,7 +78,6 @@ function outputPalette(source: PaletteLike, palette: PaletteLike, options: Plugi
 				)}"\n`
 			);
 		}
-
 	});
 
 	ws.write(buffer);
@@ -87,23 +92,25 @@ function createExtendHandler(options = {} as PluginOptions) {
 		const { inherit, current, transparent, black, white, ...cleanColors } =
 			allColors;
 		// When dynamic we need to generate our root css variables
-		// using ONLY RGB channels so opacity works 
+		// using ONLY RGB channels so opacity works
 		// example: :root { --color-primary: 21 35 22 }
 		if (options.dynamic) {
-
-			// Because set our colors as var(--color-primary) we have to relookup 
+			// Because set our colors as var(--color-primary) we have to relookup
 			// our source colors to generate vars. This is due to how Tailwind's
 			// plugin is designed. We do this by accessing "options.colors"
 			// which were updated in the previous step. We merge with the source colors
 			// with cleaned Tailwind colors temporarily overwriting our var(--color) colors.
 			const mergedColors = { ...cleanColors, ...createExtendHandler.source };
 
-			const rootVars = genRootVars({ ...mergedColors } as any, options.dynamic, options.prefix);
+			const rootVars = genRootVars(
+				{ ...mergedColors } as any,
+				options.dynamic,
+				options.prefix
+			);
 			addBase({
 				':root': rootVars
 			});
 		}
-
 	};
 }
 
@@ -125,8 +132,17 @@ function configHandler(options = {} as PluginOptions) {
 		...options
 	};
 
-	const { colors, output, dynamic, prefix, outdir, outext, outtype, outsrc, outname } =
-		options as Required<PluginOptions>;
+	const {
+		colors,
+		output,
+		dynamic,
+		prefix,
+		outdir,
+		outext,
+		outtype,
+		outsrc,
+		outname
+	} = options as Required<PluginOptions>;
 
 	// Generate source color palette for each theme color.
 	const sourceColors = genPalette(colors);
@@ -138,11 +154,10 @@ function configHandler(options = {} as PluginOptions) {
 	let themeColors = { ...sourceColors };
 
 	// Generate the vars ex: var(--color-primary)
-	if (dynamic)
-		themeColors = genThemeVars(themeColors, prefix, true);
+	if (dynamic) themeColors = genThemeVars(themeColors, prefix, true);
 
-	const shouldOutput = (output && !hasOutput)
-		|| (hasOutput && output && !prevOutput);
+	const shouldOutput =
+		(output && !hasOutput) || (hasOutput && output && !prevOutput);
 
 	prevOutput = output;
 
@@ -150,7 +165,11 @@ function configHandler(options = {} as PluginOptions) {
 	// Or if has output the palette but output status has changed to true, previous false
 	// the write to file.
 	if (shouldOutput) {
-		outputPalette(colors as PaletteLike, { ...sourceColors }, { outdir, outext, outtype, outsrc, outname });
+		outputPalette(
+			colors as PaletteLike,
+			{ ...sourceColors },
+			{ outdir, outext, outtype, outsrc, outname }
+		);
 		hasOutput = true;
 	}
 
@@ -158,7 +177,7 @@ function configHandler(options = {} as PluginOptions) {
 		darkMode: 'class',
 		theme: {
 			extend: {
-				colors: themeColors,
+				colors: themeColors
 			}
 		}
 	} as Partial<Config>;
@@ -166,14 +185,9 @@ function configHandler(options = {} as PluginOptions) {
 	return config as Config;
 }
 
-// export const plugin = createPlugin(
-// 	(options = {} as PluginOptions) => createExtendHandler(options),
-// 	configHandler
-// );
-
 export const plugin = (options = {} as PluginOptions) => {
 	return createPlugin(
 		() => createExtendHandler(options),
 		() => configHandler(options)
 	);
-}
+};

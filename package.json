@@ -2,29 +2,14 @@
 	"name": "@forewind/util",
 	"version": "0.0.0-development",
 	"description": "Configuration defaults and utils for Forewind.",
-	"main": "./dist/main/index.js",
-	"module": "./dist/main/index.mjs",
-	"types": "./dist/types/main/index.d.ts",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/types/index.d.ts",
 	"exports": {
 		".": {
-			"require": "./dist/main/index.js",
-			"import": "./dist/main/index.mjs",
-			"types": "./dist/types/main/index.d.ts"
-		},
-		"./plugin": {
-			"require": "./dist/plugin/index.js",
-			"import": "./dist/plugin/index.mjs",
-			"types": "./dist/types/plugin/index.d.ts"
-		}
-	},
-	"typesVersions": {
-		"*": {
-			"main": [
-				"dist/types/main/index.d.ts"
-			],
-			"plugin": [
-				"dist/types/plugin/index.d.ts"
-			]
+			"require": "./dist/index.js",
+			"import": "./dist/index.mjs",
+			"types": "./dist/types/index.d.ts"
 		}
 	},
 	"keywords": [
@@ -52,8 +37,7 @@
 	},
 	"scripts": {
 		"clean": "rimraf dist/",
-		"mode:browserify": "browserify ./dist/browser/mode.src.js -o ./dist/browser/mode.js && rimraf dist/browser/*.src.*",
-		"build": "npm run clean && tsup && npm run types && npm run mode:browserify",
+		"build": "npm run clean && tsup && npm run types",
 		"types": "tsc --emitDeclarationOnly",
 		"types:watch": "tsc --emitDeclarationOnly -w",
 		"dev": "tsup --watch src",
@@ -104,9 +88,7 @@
 	},
 	"tsup": {
 		"entry": [
-			"src/main/index.ts",
-			"src/browser/mode.src.ts",
-			"src/plugin/index.ts"
+			"src/index.ts"
 		],
 		"splitting": false,
 		"sourcemap": true,
