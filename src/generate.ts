@@ -93,6 +93,7 @@ function buildPalette(value: string, rgb = false) {
 		...objectify(tinycolor.mix(baseDark, value, 70), '700', rgb),
 		...objectify(tinycolor.mix(baseDark, value, 54), '800', rgb),
 		...objectify(tinycolor.mix(baseDark, value, 25), '900', rgb),
+		...objectify(tinycolor.mix(baseDark, value, 10), '950', rgb),
 		DEFAULT: midpointVal
 	};
 }
