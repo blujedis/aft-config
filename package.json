@@ -1,5 +1,5 @@
 {
-	"name": "@forewind/util",
+	"name": "@sveleton/config",
 	"version": "0.0.0-development",
 	"description": "Configuration defaults and utils for Forewind.",
 	"main": "./dist/index.js",
