@@ -3,7 +3,7 @@ export const shades = [
 ] as const;
 
 export const defaultPalette = {
-	primary: '#4B6279',
+	primary: '#165ea6',
 	secondary: '#F05454',
 	tertiary: '#98998F',
 	quaternary: '#97A5AC',

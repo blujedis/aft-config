@@ -1,4 +1,5 @@
 import tailwindPlugin from 'tailwindcss/plugin';
+import formsPlugin from '@tailwindcss/forms';
 import { genPalette, genRootVars, genThemeVars } from './generate';
 import { defaultPalette } from './palette';
 import { Config, PluginAPI } from 'tailwindcss/types/config';
@@ -29,7 +30,7 @@ function getPath(
  * @param outdir the path to output the file to.
  */
 function outputPalette(
-	source: PaletteLike,
+	// source: PaletteLike,
 	palette: PaletteLike,
 	options: PluginOutput
 ) {
@@ -44,17 +45,17 @@ function outputPalette(
 	if (!outpath) return;
 
 	let output = JSON.stringify(palette, null, 2);
-	let sourceOutput = JSON.stringify(source, null, 2);
+	// let sourceOutput = JSON.stringify(source, null, 2);
 
 	if (options.outtype === 'cjs') output = `module.exports = ` + output + ';\n';
 	else if (options.outtype !== 'json')
-		output = 'const palette = ' + output + ';\n\nexport default palette;';
+		output = 'export const palette = ' + output + ';\n\nexport default palette;';
 
-	if (options.outtype === 'cjs') output = `exports.source = ` + sourceOutput + ';\n';
-	else if (options.outtype !== 'json')
-		sourceOutput = 'export const source = ' + sourceOutput + ';\n';
+	// if (options.outtype === 'cjs') output = `exports.source = ` + sourceOutput + ';\n';
+	// else if (options.outtype !== 'json')
+	// 	sourceOutput = 'export const source = ' + sourceOutput + ';\n';
 
-	output = options.outsrc ? sourceOutput + '\n' + output : output;
+	// output = options.outsrc ? sourceOutput + '\n' + output : output;
 
 	const ws = createWriteStream(outpath);
 	const buffer = Buffer.from(output, 'utf-8');
@@ -68,11 +69,11 @@ function outputPalette(
 	ws.on('close', () => {
 		if (hasError) {
 			process.stdout.write(
-				`  \u001b[31m✖\u001b[0m  Forewind: palette output FAILED: "${outpath}"\n`
+				`  \u001b[31m✖\u001b[0m  Sveleton: palette output FAILED: "${outpath}"\n`
 			);
 		} else {
 			process.stdout.write(
-				`  \u001b[32;1m➜\u001b[0m  Forewind: palette output: "${relative(
+				`  \u001b[32;1m➜\u001b[0m  Sveleton: palette output: "${relative(
 					cwd,
 					outpath
 				)}"\n`
@@ -83,14 +84,32 @@ function outputPalette(
 	ws.write(buffer);
 }
 
-// const defaultKeys = Object.keys(defaultPalette);
-
 function createExtendHandler(options = {} as PluginOptions) {
 	return (api: PluginAPI) => {
 		const { addBase, theme } = api;
 		const allColors = theme('colors') as Record<string, any>;
 		const { inherit, current, transparent, black, white, ...cleanColors } =
 			allColors;
+
+		const plugins = api.config('plugins') as any[];
+
+		// loose check to ensure @tailwindcss/forms
+		// is present in plugins, not sure if there is
+		// a better way but this seems better than overriding
+		// user plugins or trying to merge them.
+		const hasStrategy = plugins.some((p) => {
+			return (
+				typeof p === 'object' &&
+				typeof p.__options !== 'undefined' &&
+				p.__options.strategy === 'class'
+			);
+		});
+
+		if (!hasStrategy)
+			throw new Error(
+				`@sveleton/config requires Tailwind plugin @tailwindcss/forms but appears to be missing.\nexample:\nrequire('@tailwindcss/forms')({\n  strategy: "class"\n})\n`
+			);
+
 		// When dynamic we need to generate our root css variables
 		// using ONLY RGB channels so opacity works
 		// example: :root { --color-primary: 21 35 22 }
@@ -116,6 +135,14 @@ function createExtendHandler(options = {} as PluginOptions) {
 
 createExtendHandler.source = {} as Record<string, any>;
 
+// output: false,
+// outsrc: false,
+// outdir: './src/lib/theme/palettes',
+// outname: 'app',
+// dynamic: true,
+// outtype: 'esm',
+// outext: 'ts',
+
 /**
  * Handler for generating the Tailwind configuration.
  *
@@ -125,33 +152,27 @@ function configHandler(options = {} as PluginOptions) {
 	options = {
 		dynamic: true,
 		prefix: 'color',
-		outtype: 'json',
-		output: true,
-		outsrc: false,
+		outdir: './src/theme',
+		outname: 'palette',
+		outext: 'ts',
+		outtype: 'esm',
+		output: false,
 		colors: { ...defaultPalette },
 		...options
 	};
 
-	const {
-		colors,
-		output,
-		dynamic,
-		prefix,
-		outdir,
-		outext,
-		outtype,
-		outsrc,
-		outname
-	} = options as Required<PluginOptions>;
+	const { colors, output, dynamic, prefix, outdir, outext, outtype, outname } =
+		options as Required<PluginOptions>;
 
 	// Generate source color palette for each theme color.
-	const sourceColors = genPalette(colors);
+	// normalized object of color name and object of each color 50 - 950 shades.
+	const generatedColors = genPalette(colors);
 
 	// Update colors we'll need this when generating root vars when dynamic.
-	createExtendHandler.source = sourceColors;
+	createExtendHandler.source = generatedColors;
 
 	// Theme colors may be clone or generated as dynamic css variables in next step.
-	let themeColors = { ...sourceColors };
+	let themeColors = { ...generatedColors };
 
 	// Generate the vars ex: var(--color-primary)
 	if (dynamic) themeColors = genThemeVars(themeColors, prefix, true);
@@ -166,18 +187,20 @@ function configHandler(options = {} as PluginOptions) {
 	// the write to file.
 	if (shouldOutput) {
 		outputPalette(
-			colors as PaletteLike,
-			{ ...sourceColors },
-			{ outdir, outext, outtype, outsrc, outname }
+			// colors as PaletteLike,
+			{ ...generatedColors },
+			{ outdir, outext, outtype, outname }
 		);
 		hasOutput = true;
 	}
 
 	const config = {
-		darkMode: 'class',
 		theme: {
 			extend: {
-				colors: themeColors
+				colors: themeColors,
+				fontSize: {
+					md: ['1rem', { lineHeight: '1.5rem' }]
+				}
 			}
 		}
 	} as Partial<Config>;

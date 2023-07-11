@@ -17,7 +17,7 @@ export interface PluginOutput {
 	outtype?: 'esm' | 'cjs' | 'json';
 	outext?: 'js' | 'cjs' | 'mjs' | 'ts' | 'json';
 	output?: boolean;
-	outsrc?: boolean;
+	// outsrc?: boolean;
 }
 
 export interface PluginOptions extends PluginOutput {

@@ -39,21 +39,6 @@ const objectify = (value: tinycolor.ColorInput, name: string, rgb = false) => ({
 
 const white = tinycolor('#ffffff');
 
-// function buildPaletteByVarColor(varColor: string) {
-// 	return {
-// 		'50': `var(${varColor}-50)`,
-// 		'100': `var(${varColor}-100)`,
-// 		'200': `var(${varColor}-200)`,
-// 		'300': `var(${varColor}-300)`,
-// 		'400': `var(${varColor}-400)`,
-// 		'500': `var(${varColor}-500)`,
-// 		'600': `var(${varColor}-600)`,
-// 		'700': `var(${varColor}-700)`,
-// 		'800': `var(${varColor}-800)`,
-// 		'900': `var(${varColor}-900)`
-// 	};
-// }
-
 /**
  * Builds color palette of color shades.
  *
@@ -61,20 +46,7 @@ const white = tinycolor('#ffffff');
  * @param rgb when true create object using rgb channels instead of hex.
  */
 function buildPalette(value: string, rgb = false) {
-	// const varColorMatch = value.match(/var\((?<color>[^)]+)/) as RegExpMatchArray;
-
-	// Checks if color is in format of var(--color-primary)
-	// if (varColorMatch && varColorMatch?.groups) {
-	// 	if (!varColorMatch.groups['color'])
-	// 		throw new Error(`Invalid color match group.`);
-	// 	return {
-	// 		...buildPaletteByVarColor(varColorMatch.groups['color']),
-	// 		DEFAULT: `var(${varColorMatch.groups['color']}-500)`
-	// 	};
-	// }
-
 	const baseDark = multiply(tinycolor(value).toRgb(), tinycolor(value).toRgb());
-
 	// Make lightest/midpoint here so we know below
 	// where both points on in object. Also need to grab
 	// midpoint here for the default.

@@ -12,29 +12,6 @@
 			"types": "./dist/types/index.d.ts"
 		}
 	},
-	"keywords": [
-		"forewind",
-		"tailwind",
-		"svelte",
-		"components"
-	],
-	"files": [
-		"dist",
-		"docs"
-	],
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/blujedis/forewind-util"
-	},
-	"bugs": {
-		"url": "https://github.com/blujedis/forewind-util/issues"
-	},
-	"homepage": "https://github.com/blujedis/forewind-util#readme",
-	"author": {
-		"name": "Blujedis",
-		"url": "https://github.com/blujedis"
-	},
 	"scripts": {
 		"clean": "rimraf dist/",
 		"build": "npm run clean && tsup && npm run types",
@@ -49,7 +26,31 @@
 		"lint": "eslint --ignore-path .gitignore . --ext .js,.jsx,.ts,.tsx",
 		"lint:fix": "npm run lint -- --fix",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
-		"test": "echo \"Warn: no test specified in @forewind/util\""
+		"test": "echo \"Warn: no test specified in @sveleton/config\""
+	},
+	"keywords": [
+		"sveleton",
+		"tailwind",
+		"tailwindcss",
+		"svelte",
+		"components"
+	],
+	"files": [
+		"dist",
+		"docs"
+	],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/blujedis/sveleton-config"
+	},
+	"bugs": {
+		"url": "https://github.com/blujedis/sveleton-config/issues"
+	},
+	"homepage": "https://github.com/blujedis/sveleton-config#readme",
+	"author": {
+		"name": "Blujedis",
+		"url": "https://github.com/blujedis"
 	},
 	"dependencies": {
 		"dot-prop": "^7.2.0",
@@ -57,7 +58,8 @@
 		"tailwind-merge": "^1.7.0",
 		"tailwindcss": "^3.1.8",
 		"tinycolor2": "^1.4.2",
-		"values.js": "^2.1.1"
+		"values.js": "^2.1.1",
+		"@tailwindcss/forms": "^0.5.3"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^17.0.3",
