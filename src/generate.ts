@@ -14,7 +14,7 @@ const excluded = ['white', 'black', 'transparent', 'inherit', 'current'] as cons
  *
  * @param color the color to get RGB channels for.
  */
-function getRgbChannels(color: tinycolor.ColorInput) {
+export function getRgbChannels(color: tinycolor.ColorInput) {
 	const c = tinycolor(color).toRgb();
 	return `${c.r} ${c.g} ${c.b}`;
 }

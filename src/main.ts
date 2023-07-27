@@ -1,6 +1,6 @@
 import tailwindPlugin from 'tailwindcss/plugin';
 import formsPlugin from '@tailwindcss/forms';
-import { genPalette, genRootVars, genThemeVars } from './generate';
+import { genPalette, genRootVars, genThemeVars, getRgbChannels } from './generate';
 import { defaultPalette } from './palette';
 import { Config, PluginAPI } from 'tailwindcss/types/config';
 import { join, relative } from 'path';
@@ -126,6 +126,8 @@ function createExtendHandler(options = {} as PluginOptions) {
 				options.dynamic,
 				options.prefix
 			);
+			rootVars['--color-white'] = getRgbChannels(white);
+			rootVars['--color-black'] = getRgbChannels(black);
 			addBase({
 				':root': rootVars
 			});
