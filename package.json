@@ -53,13 +53,8 @@
 		"url": "https://github.com/blujedis"
 	},
 	"dependencies": {
-		"@tailwindcss/forms": "^0.5.7",
-		"dot-prop": "^8.0.2",
-		"lodash.clonedeep": "^4.5.0",
-		"tailwind-merge": "^2.2.0",
 		"tailwindcss": "^3.4.1",
-		"tinycolor2": "^1.6.0",
-		"values.js": "^2.1.1"
+		"tinycolor2": "^1.6.0"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^18.4.4",
