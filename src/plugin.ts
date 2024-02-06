@@ -129,6 +129,18 @@ export const aft =
       });
 
       addUtilities({
+        '.text-light': {
+          color: `rgb(var(--body-text-light))`
+        }
+      });
+
+      addUtilities({
+        '.text-dark': {
+          color: `rgb(var(--body-text-dark))`
+        }
+      });
+
+      addUtilities({
         '.small-caps': {
           'font-variant': 'all-small-caps'
         }

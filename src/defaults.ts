@@ -1,21 +1,20 @@
 import defaultTailwindColors from 'tailwindcss/colors';
 
 const defaultColors = {
-	frame: defaultTailwindColors.gray,
-	// frame: {
-	// 	// DEFAULT: '#6b7280',
-	// 	'50': '#f8fafc',
-	// 	'100': '#f1f5f9',
-	// 	'200': '#e2e8f0',
-	// 	'300': '#cbd5e1',
-	// 	'400': '#94a3b8',
-	// 	'500': '#64748b',
-	// 	'600': '#475569',
-	// 	'700': '#334155',
-	// 	'800': '#1e293b',
-	// 	'900': '#0f172a',
-	// 	'950': '#020617'
-	// },
+	frame: {
+		// DEFAULT: '#6b7280',
+		50: '#F9FAFB',
+		100: '#F3F4F6',
+		200: '#EDEFF2',
+		300: '#E5E7EB',
+		400: '#A7B0BE',
+		500: '#5F6D81',
+		600: '#485261',
+		700: '#38404C',
+		800: '#23282F',
+		900: '#14161A',
+		950: '#0B0C0F'
+	},
 	primary: {
 		// DEFAULT: '#0D4C87',
 		50: '#E3F0FC',
@@ -119,7 +118,7 @@ const defaultColors = {
 const defaultTheme = {
 	name: 'default',
 	variables: {
-		'--body-text-light': defaultColors.frame['800'],
+		'--body-text-light': defaultColors.frame['700'],
 		'--body-text-dark': defaultColors.frame['100'],
 		'--body-bg-light': '#ffffff',
 		'--body-bg-dark': defaultColors.frame['800'],
