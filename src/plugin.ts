@@ -1,6 +1,8 @@
 import tinycolor, { ColorInput } from 'tinycolor2';
 import plugin from 'tailwindcss/plugin';
 import { defaultColors } from './defaults';
+import svgToDataUri from 'mini-svg-data-uri';
+import colors from 'tailwindcss/colors';
 
 export type ThemeShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950
 export type ThemeColorObject = Record<ThemeShade, string> & { DEFAULT?: string };
@@ -88,7 +90,10 @@ export function generateThemes(config: Record<string, Theme>) {
 
 export const aft =
   plugin.withOptions<Record<string, Theme>>((config) => {
-    return ({ addBase, addUtilities, matchUtilities, theme }) => {
+    return ({ addBase, addUtilities, matchUtilities, addComponents, theme }) => {
+
+
+
       addBase({
 
         ...generateThemes(config),
@@ -120,6 +125,19 @@ export const aft =
         }
 
       });
+
+      // addComponents({
+      //   '.form-select': {
+      //     'background-image': `url("${svgToDataUri(
+      //       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="${theme('colors.frame.400', colors.slate['400'])}" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>`
+      //     )}")`
+      //   },
+      //   '.select-filled': {
+      //     'background-image': `url("${svgToDataUri(
+      //       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="rgb(var(--body-text-dark))" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>`
+      //     )}")`
+      //   }
+      // })
 
       addUtilities({
         '.text-md': {
@@ -153,6 +171,9 @@ export const aft =
       matchUtilities({
         outline: (value) => ({
           outlineWidth: value
+        }),
+        ring: (value) => ({
+          ringWidth: value
         })
       }, {
         values: { ...theme('outlineWidth'), 3: '3px' } as any
