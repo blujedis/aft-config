@@ -131,11 +131,6 @@ export const aft =
       //     'background-image': `url("${svgToDataUri(
       //       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="${theme('colors.frame.400', colors.slate['400'])}" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>`
       //     )}")`
-      //   },
-      //   '.select-filled': {
-      //     'background-image': `url("${svgToDataUri(
-      //       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="rgb(var(--body-text-dark))" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>`
-      //     )}")`
       //   }
       // })
 
@@ -143,28 +138,16 @@ export const aft =
         '.text-md': {
           fontSize: '1.0rem',
           lineHeight: '1.5'
-        }
-      });
-
-      addUtilities({
+        },
         '.text-light': {
-          color: `rgb(var(--body-text-light))`
-        }
-      });
-
-      addUtilities({
+          color: `rgb(var(--body-text-dark))/<alpha-value>`
+        },
         '.text-dark': {
-          color: `rgb(var(--body-text-dark))`
-        }
-      });
-
-      addUtilities({
+          color: `rgb(var(--body-text-light))/<alpha-value>`
+        },
         '.small-caps': {
           'font-variant': 'all-small-caps'
-        }
-      });
-
-      addUtilities({
+        },
         '.fade-in-down': 'fade-in-down 0.3s ease-out'
       });
 
