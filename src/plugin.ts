@@ -1,8 +1,6 @@
 import tinycolor, { ColorInput } from 'tinycolor2';
 import plugin from 'tailwindcss/plugin';
 import { defaultColors } from './defaults';
-import svgToDataUri from 'mini-svg-data-uri';
-import colors from 'tailwindcss/colors';
 
 export type ThemeShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950
 export type ThemeColorObject = Record<ThemeShade, string> & { DEFAULT?: string };
@@ -139,11 +137,17 @@ export const aft =
           fontSize: '1.0rem',
           lineHeight: '1.5'
         },
-        '.text-light': {
-          color: `rgb(var(--body-text-dark))/<alpha-value>`
+        '.font-dark': {
+          color: `rgb(var(--body-text-dark))`
         },
-        '.text-dark': {
-          color: `rgb(var(--body-text-light))/<alpha-value>`
+        '.font-light': {
+          color: `rgb(var(--body-text-light))`
+        },
+        '.body-dark': {
+          'background-color': `rgb(var(--body-bg-dark))`
+        },
+        '.body-light': {
+          'background-color': `rgb(var(--body-bg-light))`
         },
         '.small-caps': {
           'font-variant': 'all-small-caps'
