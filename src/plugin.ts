@@ -88,9 +88,9 @@ export function generateThemes(config: Record<string, Theme>) {
 
 export const aft =
   plugin.withOptions<Record<string, Theme>>((config) => {
-    return ({ addBase, addUtilities, matchUtilities, addComponents, theme }) => {
+    return (opts) => {
 
-
+      const { addBase, addUtilities, matchUtilities, addComponents, theme } = opts;
 
       addBase({
 
@@ -155,23 +155,28 @@ export const aft =
         '.fade-in-down': 'fade-in-down 0.3s ease-out'
       });
 
-      matchUtilities({
-        outline: (value) => ({
-          outlineWidth: value
-        }),
-        ring: (value) => ({
-          ringWidth: value
-        })
-      }, {
-        values: { ...theme('outlineWidth'), 3: '3px' } as any
-      });
+      // matchUtilities({
+      //   outline: (value) => ({
+      //     outlineWidth: value
+      //   }),
+      // }, {
+      //   values: { ...theme('outlineWidth'), 3: '3px' } as any
+      // });
+
+      // matchUtilities({
+      //   ring: (value) => ({
+      //     ringWidth: value
+      //   })
+      // }, {
+      //   values: { ...theme('ringWidth'), 3: '3px' } as any
+      // });
 
       matchUtilities({
         brightness: (value) => ({
           filter: `brightness(${value})`
         })
       }, {
-        values: { ...theme('brightness'), 80: '.80', 85: '.85', 115: '1.15', 135: '1.35' }
+        values: { ...theme('brightness'), 80: '.80', 85: '.85', 102: '1.02', 115: '1.15', 135: '1.35' }
       });
 
       matchUtilities({
