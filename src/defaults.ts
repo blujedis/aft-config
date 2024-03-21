@@ -1,7 +1,21 @@
 import defaultTailwindColors from 'tailwindcss/colors';
 
 const defaultColors = {
-	frame: defaultTailwindColors.slate,
+	// frame: defaultTailwindColors.neutral,
+
+	'frame': {
+		50: '#F9FAFB',
+		100: '#EEF0F2',
+		200: '#D7DBE0',
+		300: '#C0C7CE',
+		400: '#95A1AC',
+		500: '#677584',
+		600: '#434D56',
+		700: '#2F363C',
+		800: '#24292E',
+		900: '#161A1D',
+		950: '#121417'
+	},
 	// frame: {
 	// 	50: '#F9FAFB',
 	// 	100: '#F3F4F6',
@@ -114,7 +128,7 @@ const defaultTheme = {
 		'--body-text-light': defaultColors.frame['700'],
 		'--body-text-dark': defaultColors.frame['100'],
 		'--body-bg-light': '#ffffff',
-		'--body-bg-dark': defaultColors.frame['900'], // #1e293b
+		'--body-bg-dark': defaultColors.frame['800'],
 	},
 	colors: { ...defaultColors }
 };
