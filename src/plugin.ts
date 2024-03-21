@@ -124,24 +124,26 @@ export const aft =
 
       });
 
-      // addComponents({
-      //   '.form-select': {
-      //     'background-image': `url("${svgToDataUri(
-      //       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="${theme('colors.frame.400', colors.slate['400'])}" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>`
-      //     )}")`
-      //   }
-      // })
-
       addUtilities({
         '.text-md': {
           fontSize: '1.0rem',
           lineHeight: '1.5'
         },
-        '.font-dark': {
+        // color of text in darkmode.
+        'body-text-dark': {
           color: `rgb(var(--body-text-dark))`
         },
-        '.font-light': {
+        // color of text in lightmode
+        'body-text-light': {
           color: `rgb(var(--body-text-light))`
+        },
+        // dark color text = body-text-light
+        '.text-dark': {
+          color: `rgb(var(--body-text-light))`
+        },
+        // light color text = body-text-dark
+        '.text-light': {
+          color: `rgb(var(--body-text-dark))`
         },
         '.body-dark': {
           'background-color': `rgb(var(--body-bg-dark))`
@@ -154,22 +156,6 @@ export const aft =
         },
         '.fade-in-down': 'fade-in-down 0.3s ease-out'
       });
-
-      // matchUtilities({
-      //   outline: (value) => ({
-      //     outlineWidth: value
-      //   }),
-      // }, {
-      //   values: { ...theme('outlineWidth'), 3: '3px' } as any
-      // });
-
-      // matchUtilities({
-      //   ring: (value) => ({
-      //     ringWidth: value
-      //   })
-      // }, {
-      //   values: { ...theme('ringWidth'), 3: '3px' } as any
-      // });
 
       matchUtilities({
         brightness: (value) => ({
@@ -190,6 +176,7 @@ export const aft =
     };
   },
     () => {
+
       return {
         theme: {
           extend: {

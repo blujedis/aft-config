@@ -1,33 +1,21 @@
 import defaultTailwindColors from 'tailwindcss/colors';
 
 const defaultColors = {
-	frame: {
-		// DEFAULT: '#6b7280',
-		// 50: '#F9FAFB',
-		// 100: '#F3F4F6',
-		// 200: '#EDEFF2',
-		// 300: '#E5E7EB',
-		// 400: '#A7B0BE',
-		// 500: '#5F6D81',
-		// 600: '#485261',
-		// 700: '#38404C',
-		// 800: '#23282F',
-		// 900: '#14161A',
-		// 950: '#0B0C0F'
-		50: '#F9FAFB',
-		100: '#F3F4F6',
-		200: '#EDEFF2',
-		300: '#D8DDE3',
-		400: '#A9B2C1',
-		500: '#6E7D96',
-		600: '#536074',
-		700: '#404A59',
-		800: '#292F38',
-		900: '#15191E',
-		950: '#0F1115'
-	},
+	frame: defaultTailwindColors.slate,
+	// frame: {
+	// 	50: '#F9FAFB',
+	// 	100: '#F3F4F6',
+	// 	200: '#EDEFF2',
+	// 	300: '#D8DDE3',
+	// 	400: '#A9B2C1',
+	// 	500: '#6E7D96',
+	// 	600: '#536074',
+	// 	700: '#404A59',
+	// 	800: '#292F38',
+	// 	900: '#15191E',
+	// 	950: '#0F1115'
+	// },
 	primary: {
-		// DEFAULT: '#0D4C87',
 		50: '#E3F0FC',
 		100: '#CCE4FA',
 		200: '#9DCBF6',
@@ -41,7 +29,6 @@ const defaultColors = {
 		950: '#03111E'
 	},
 	secondary: {
-		// DEFAULT: '#FF7057',
 		50: '#FFDAD4',
 		100: '#FFCBC2',
 		200: '#FFAD9E',
@@ -55,7 +42,6 @@ const defaultColors = {
 		950: '#430E04'
 	},
 	tertiary: {
-		// DEFAULT: '#999485',
 		50: '#F7F6F5',
 		100: '#ECECE9',
 		200: '#D8D6D0',
@@ -80,7 +66,6 @@ const defaultColors = {
 		800: '#9f1239',
 		900: '#881337',
 		950: '#4c0519',
-		// DEFAULT: '#f43f5e'
 	},
 	warning: {
 		50: '#fffbeb',
@@ -94,7 +79,6 @@ const defaultColors = {
 		800: '#92400e',
 		900: '#78350f',
 		950: '#451a03',
-		// DEFAULT: '#f59e0b'
 	},
 	success: {
 		50: '#ecfdf5',
@@ -108,7 +92,6 @@ const defaultColors = {
 		800: '#065f46',
 		900: '#064e3b',
 		950: '#022c22',
-		// DEFAULT: '#10b981'
 	},
 	info: {
 		50: '#ecfeff',
@@ -122,7 +105,6 @@ const defaultColors = {
 		800: '#155e75',
 		900: '#164e63',
 		950: '#083344',
-		// DEFAULT: '#06b6d4'
 	}
 };
 
@@ -132,7 +114,7 @@ const defaultTheme = {
 		'--body-text-light': defaultColors.frame['700'],
 		'--body-text-dark': defaultColors.frame['100'],
 		'--body-bg-light': '#ffffff',
-		'--body-bg-dark': defaultColors.frame['800'],
+		'--body-bg-dark': defaultColors.frame['900'], // #1e293b
 	},
 	colors: { ...defaultColors }
 };
