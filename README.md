@@ -1,7 +1,3 @@
-# Forewind Util
+# Aft Config
 
-output: false,
-outsrc: false,
-outdir: './src/lib/theme/palettes',
-outname: 'app',
-dyanmie: true
+Configuration package for @aft/ui
