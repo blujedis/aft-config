@@ -1,3 +1,3 @@
 # Aft Config
 
-Configuation package for @aft/ui
+Configuration package for @aft/ui
