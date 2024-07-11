@@ -42,12 +42,12 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/blujedis/sveleton-config"
+		"url": "https://github.com/blujedis/aft-config.git"
 	},
 	"bugs": {
-		"url": "https://github.com/blujedis/sveleton-config/issues"
+		"url": "https://github.com/blujedis/aft-config/issues"
 	},
-	"homepage": "https://github.com/blujedis/sveleton-config#readme",
+	"homepage": "https://github.com/blujedis/aft-config#readme",
 	"author": {
 		"name": "Blujedis",
 		"url": "https://github.com/blujedis"
