@@ -1,6 +1,6 @@
 {
 	"name": "@aft/config",
-	"version": "0.0.0-development",
+	"version": "1.0.0",
 	"description": "Tailwind plugin for generating colors and variables.",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
