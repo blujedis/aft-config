@@ -1,5 +1,4 @@
 {
-
 	"name": "@aft/config",
 	"version": "0.0.0-development",
 	"description": "Tailwind plugin for generating colors and variables.",
@@ -121,7 +120,8 @@
 			[
 				"@semantic-release/npm",
 				{
-					"npmPublish": true
+					"npmPublish": false,
+					"tarballDir": "dist"
 				}
 			],
 			"@semantic-release/changelog",
