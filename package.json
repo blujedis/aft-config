@@ -19,7 +19,7 @@
 		"types:watch": "tsc --emitDeclarationOnly -w",
 		"dev": "tsup --watch src",
 		"docs": "rimraf docs/ && typedoc src/index.ts && touch ./docs/.nojekyll",
-		"prepare": "husky install",
+		"prepare": "npx husky install",
 		"prepublishOnly": "npm run build && npm run docs",
 		"semantic-release": "semantic-release --branches main",
 		"format": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
