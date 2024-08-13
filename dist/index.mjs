@@ -4,33 +4,23 @@ import plugin from 'tailwindcss/plugin';
 
 // src/defaults.ts
 var defaultColors = {
-  // frame: defaultTailwindColors.neutral,
+  /**
+   * @see https://www.tailwindshades.com/#color=220%2C15.294117647058819%2C50&step-up=8&step-down=11&hue-shift=0&name=slate-gray&base-stop=5&v=1&overrides=eyIxIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjk0LCJoZXgiOiJFREVGRjIiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCIyIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjg5LCJoZXgiOiJERkUyRTciLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCIzIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjgxLCJoZXgiOiJDN0NDRDYiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCI0Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjY2LCJoZXgiOiI5QkE0QjYiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCI2Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjMxLCJoZXgiOiI0MzRCNUIiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI3Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjIyLCJoZXgiOiIzMDM1NDEiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI4Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjE1LCJoZXgiOiIyMDI0MkMiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI5Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjcsImhleCI6IjBGMTExNSIsInRleHRDb2xvciI6IndoaXRlIn0sIjAuNSI6eyJodWUiOi0xLCJzYXR1cmF0aW9uIjotMSwibGlnaHRuZXNzIjo5OCwiaGV4IjoiRjlGQUZCIiwidGV4dENvbG9yIjoiYmxhY2sifSwiOS41Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjQsImhleCI6IjA5MEEwQyIsInRleHRDb2xvciI6IndoaXRlIn19
+   */
   "frame": {
+    // ...defaultTailwindColors.gray
     50: "#F9FAFB",
-    100: "#EEF0F2",
-    200: "#D7DBE0",
-    300: "#C0C7CE",
-    400: "#95A1AC",
-    500: "#677584",
-    600: "#434D56",
-    700: "#2F363C",
-    800: "#24292E",
-    900: "#161A1D",
-    950: "#121417"
+    100: "#EDEFF2",
+    200: "#DFE2E7",
+    300: "#C7CCD6",
+    400: "#9BA4B6",
+    500: "#6C7993",
+    600: "#434B5B",
+    700: "#303541",
+    800: "#20242C",
+    900: "#0F1115",
+    950: "#090A0C"
   },
-  // frame: {
-  // 	50: '#F9FAFB',
-  // 	100: '#F3F4F6',
-  // 	200: '#EDEFF2',
-  // 	300: '#D8DDE3',
-  // 	400: '#A9B2C1',
-  // 	500: '#6E7D96',
-  // 	600: '#536074',
-  // 	700: '#404A59',
-  // 	800: '#292F38',
-  // 	900: '#15191E',
-  // 	950: '#0F1115'
-  // },
   primary: {
     50: "#E3F0FC",
     100: "#CCE4FA",
@@ -126,10 +116,17 @@ var defaultColors = {
 var defaultTheme = {
   name: "default",
   variables: {
+    "--text-light": defaultColors.frame["100"],
+    "--text-dark": defaultColors.frame["700"],
+    "--bg-light": "#ffffff",
+    "--bg-dark": "#14161c",
+    // defaultColors.frame['900'],
+    "--bg-white": "#ffffff",
     "--body-text-light": defaultColors.frame["700"],
     "--body-text-dark": defaultColors.frame["100"],
     "--body-bg-light": "#ffffff",
-    "--body-bg-dark": defaultColors.frame["800"]
+    "--body-bg-dark": "#14161c"
+    // defaultColors.frame['900'],
   },
   colors: { ...defaultColors }
 };
@@ -172,12 +169,25 @@ function generateRootVars(colors, name = "") {
     return { ...result, ...currentResult };
   }, {});
 }
+function mergeColors(colors, defaults) {
+  const clone = JSON.parse(JSON.stringify(defaults));
+  for (const [k, v] of Object.entries(colors)) {
+    if (typeof clone[k] === "undefined")
+      continue;
+    clone[k] = { ...clone[k], ...v };
+  }
+  return clone;
+}
 function generateThemes(config) {
   return Object.entries(config).reduce((result, [key, theme]) => {
+    const { colors: c, variables: v, ...rest } = theme;
     theme = {
       name: key,
       preprocess: "both",
-      ...theme
+      colors: mergeColors(c, defaultTheme.colors),
+      // not deep merge only merges top level color key.
+      variables: { ...defaultTheme.variables, ...v },
+      ...rest
     };
     const variables = ["both", "variables"].includes(theme.preprocess || "") ? generateVariables(theme.variables) : theme.variables;
     const colors = ["both", "colors"].includes(theme.preprocess || "") ? generateRootVars(theme.colors) : theme.colors;
@@ -194,17 +204,29 @@ var aft = plugin.withOptions(
       const { addBase, addUtilities, matchUtilities, addComponents, theme } = opts;
       addBase({
         ...generateThemes(config),
+        // this seems to accept only string in types but array works hmmm...
+        // '@font-face': [{
+        //   fontFamily: 'Poppins',
+        //   fontStyle: 'normal',
+        //   fontWeight: '400',
+        //   src:
+        //     "url(https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap) format('woff2')"
+        // } as any],
         html: {
           height: "100%"
         },
         body: {
           height: "100%",
-          "background-color": "rgb(var(--body-bg-light))",
-          color: "rgb(var(--body-text-light))"
+          // 'background-color': 'rgb(var(--body-bg-light))',
+          // color: 'rgb(var(--body-text-light))'
+          "background-color": "rgb(var(--bg-light))",
+          color: "rgb(var(--text-dark))"
         },
         ".dark body": {
-          "background-color": "rgb(var(--body-bg-dark))",
-          color: "rgb(var(--body-text-dark))"
+          // 'background-color': 'rgb(var(--body-bg-dark))',
+          // color: 'rgb(var(--body-text-dark))'
+          "background-color": "rgb(var(--bg-dark))",
+          color: "rgb(var(--text-light))"
         },
         "@keyframes fade-in-down": {
           "0%": {
@@ -218,36 +240,42 @@ var aft = plugin.withOptions(
         }
       });
       addUtilities({
+        // color of text in darkmode.
+        "body-text-dark": {
+          // color: `rgb(var(--body-text-dark))`
+          color: `rgb(var(--text-light))`
+        },
+        // color of text in lightmode
+        "body-text-light": {
+          // color: `rgb(var(--body-text-light))`
+          color: `rgb(var(--text-dark))`
+        },
+        ".body-dark": {
+          //'background-color': `rgb(var(--body-bg-dark))`
+          "background-color": `rgb(var(--bg-dark))`
+        },
+        ".body-light": {
+          //'background-color': `rgb(var(--body-bg-light))`
+          "background-color": `rgb(var(--bg-light))`
+        },
+        // dark color text = body-text-light
+        ".text-dark": {
+          // color: `rgb(var(--body-text-light))`
+          color: `rgb(var(--text-dark))`
+        },
+        // light color text = body-text-dark
+        ".text-light": {
+          // color: `rgb(var(--body-text-dark))`
+          color: `rgb(var(--text-light))`
+        },
         ".text-md": {
           fontSize: "1.0rem",
           lineHeight: "1.5"
         },
-        // color of text in darkmode.
-        "body-text-dark": {
-          color: `rgb(var(--body-text-dark))`
-        },
-        // color of text in lightmode
-        "body-text-light": {
-          color: `rgb(var(--body-text-light))`
-        },
-        // dark color text = body-text-light
-        ".text-dark": {
-          color: `rgb(var(--body-text-light))`
-        },
-        // light color text = body-text-dark
-        ".text-light": {
-          color: `rgb(var(--body-text-dark))`
-        },
-        ".body-dark": {
-          "background-color": `rgb(var(--body-bg-dark))`
-        },
-        ".body-light": {
-          "background-color": `rgb(var(--body-bg-light))`
-        },
         ".small-caps": {
           "font-variant": "all-small-caps"
         },
-        ".fade-in-down": "fade-in-down 0.3s ease-out"
+        ".fade-in-down": "fade-in-down .3s ease-out"
       });
       matchUtilities({
         brightness: (value) => ({
@@ -276,13 +304,18 @@ var aft = plugin.withOptions(
           //    secondary: 'rgb(var(--color-${colorName})/<alpha-value>)',
           //    ....continue w/ each color
           // }
-          colors: generateTailwindVars(defaultColors)
+          colors: generateTailwindVars(defaultTheme.colors)
+          // fontFamily: {
+          //   // make sure this font family is the same as the one
+          //   // defined in your @font-face
+          //   sans: ['Poppins', ...fontFamily.sans]
+          // },
         }
       }
     };
   }
 );
 
-export { aft, defaultColors, defaultTheme, ensureDefault, generateRootVars, generateTailwindVars, generateThemes, generateVariables, getRgbChannels };
+export { aft, defaultColors, defaultTheme, ensureDefault, generateRootVars, generateTailwindVars, generateThemes, generateVariables, getRgbChannels, mergeColors };
 //# sourceMappingURL=out.js.map
 //# sourceMappingURL=index.mjs.map

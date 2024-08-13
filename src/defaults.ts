@@ -1,34 +1,25 @@
 import defaultTailwindColors from 'tailwindcss/colors';
 
-const defaultColors = {
-	// frame: defaultTailwindColors.neutral,
 
+const defaultColors = {
+
+	/**
+	 * @see https://www.tailwindshades.com/#color=220%2C15.294117647058819%2C50&step-up=8&step-down=11&hue-shift=0&name=slate-gray&base-stop=5&v=1&overrides=eyIxIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjk0LCJoZXgiOiJFREVGRjIiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCIyIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjg5LCJoZXgiOiJERkUyRTciLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCIzIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjgxLCJoZXgiOiJDN0NDRDYiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCI0Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjY2LCJoZXgiOiI5QkE0QjYiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCI2Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjMxLCJoZXgiOiI0MzRCNUIiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI3Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjIyLCJoZXgiOiIzMDM1NDEiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI4Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjE1LCJoZXgiOiIyMDI0MkMiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI5Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjcsImhleCI6IjBGMTExNSIsInRleHRDb2xvciI6IndoaXRlIn0sIjAuNSI6eyJodWUiOi0xLCJzYXR1cmF0aW9uIjotMSwibGlnaHRuZXNzIjo5OCwiaGV4IjoiRjlGQUZCIiwidGV4dENvbG9yIjoiYmxhY2sifSwiOS41Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjQsImhleCI6IjA5MEEwQyIsInRleHRDb2xvciI6IndoaXRlIn19
+	 */
 	'frame': {
+		// ...defaultTailwindColors.gray
 		50: '#F9FAFB',
-		100: '#EEF0F2',
-		200: '#D7DBE0',
-		300: '#C0C7CE',
-		400: '#95A1AC',
-		500: '#677584',
-		600: '#434D56',
-		700: '#2F363C',
-		800: '#24292E',
-		900: '#161A1D',
-		950: '#121417'
+		100: '#EDEFF2',
+		200: '#DFE2E7',
+		300: '#C7CCD6',
+		400: '#9BA4B6',
+		500: '#6C7993',
+		600: '#434B5B',
+		700: '#303541',
+		800: '#20242C',
+		900: '#0F1115',
+		950: '#090A0C'
 	},
-	// frame: {
-	// 	50: '#F9FAFB',
-	// 	100: '#F3F4F6',
-	// 	200: '#EDEFF2',
-	// 	300: '#D8DDE3',
-	// 	400: '#A9B2C1',
-	// 	500: '#6E7D96',
-	// 	600: '#536074',
-	// 	700: '#404A59',
-	// 	800: '#292F38',
-	// 	900: '#15191E',
-	// 	950: '#0F1115'
-	// },
 	primary: {
 		50: '#E3F0FC',
 		100: '#CCE4FA',
@@ -125,10 +116,16 @@ const defaultColors = {
 const defaultTheme = {
 	name: 'default',
 	variables: {
+		'--text-light': defaultColors.frame['100'],
+		'--text-dark': defaultColors.frame['700'],
+		'--bg-light': '#ffffff',
+		'--bg-dark': '#14161c', // defaultColors.frame['900'],
+		'--bg-white': '#ffffff',
+
 		'--body-text-light': defaultColors.frame['700'],
 		'--body-text-dark': defaultColors.frame['100'],
 		'--body-bg-light': '#ffffff',
-		'--body-bg-dark': defaultColors.frame['800'],
+		'--body-bg-dark': '#14161c', // defaultColors.frame['900'],
 	},
 	colors: { ...defaultColors }
 };
