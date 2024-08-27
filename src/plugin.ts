@@ -1,9 +1,6 @@
 import tinycolor, { ColorInput } from 'tinycolor2';
 import plugin from 'tailwindcss/plugin';
-import { fontFamily } from 'tailwindcss/defaultTheme';
 import { defaultTheme } from './defaults';
-
-
 
 export type ThemeShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950
 export type ThemeColorObject = Record<ThemeShade, string> & { DEFAULT?: string };
@@ -102,7 +99,7 @@ export function generateThemes(config: Record<string, Theme>) {
 }
 
 export const aft =
-  plugin.withOptions<Record<string, Theme>>((config) => {
+  plugin.withOptions<Record<string, Theme>>(function createAft(config) {
     return (opts) => {
 
       const { addBase, addUtilities, matchUtilities, addComponents, theme } = opts;
@@ -209,7 +206,7 @@ export const aft =
 
     };
   },
-    () => {
+    (arg1) => {
 
       return {
         theme: {

@@ -1,3 +1,4 @@
+import defaultTailwindColors from 'tailwindcss/colors';
 export { default as defaultTailwindColors } from 'tailwindcss/colors';
 import tinycolor from 'tinycolor2';
 import plugin from 'tailwindcss/plugin';
@@ -5,21 +6,21 @@ import plugin from 'tailwindcss/plugin';
 // src/defaults.ts
 var defaultColors = {
   /**
-   * @see https://www.tailwindshades.com/#color=220%2C15.294117647058819%2C50&step-up=8&step-down=11&hue-shift=0&name=slate-gray&base-stop=5&v=1&overrides=eyIxIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjk0LCJoZXgiOiJFREVGRjIiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCIyIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjg5LCJoZXgiOiJERkUyRTciLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCIzIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjgxLCJoZXgiOiJDN0NDRDYiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCI0Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjY2LCJoZXgiOiI5QkE0QjYiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCI2Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjMxLCJoZXgiOiI0MzRCNUIiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI3Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjIyLCJoZXgiOiIzMDM1NDEiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI4Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjE1LCJoZXgiOiIyMDI0MkMiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI5Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjcsImhleCI6IjBGMTExNSIsInRleHRDb2xvciI6IndoaXRlIn0sIjAuNSI6eyJodWUiOi0xLCJzYXR1cmF0aW9uIjotMSwibGlnaHRuZXNzIjo5OCwiaGV4IjoiRjlGQUZCIiwidGV4dENvbG9yIjoiYmxhY2sifSwiOS41Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjQsImhleCI6IjA5MEEwQyIsInRleHRDb2xvciI6IndoaXRlIn19
+   * @see https://www.tailwindshades.com/#color=220%2C15.294117647058819%2C50&step-up=8&step-down=11&hue-shift=0&name=slate-gray&base-stop=5&v=1&overrides=eyIxIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjk0LCJoZXgiOiJFREVGRjIiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCIyIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjg5LCJoZXgiOiJERkUyRTciLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCIzIjp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjgxLCJoZXgiOiJDN0NDRDYiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCI0Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjY4LCJoZXgiOiJBMUE5QkEiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCI1Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjU3LCJoZXgiOiI4MThDQTIiLCJ0ZXh0Q29sb3IiOiJibGFjayJ9LCI2Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjQ4LCJoZXgiOiI2ODc0OEQiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI3Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjM2LCJoZXgiOiI0RTU3NkEiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI4Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjIyLCJoZXgiOiIzMDM1NDEiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCI5Ijp7Imh1ZSI6LTEsInNhdHVyYXRpb24iOi0xLCJsaWdodG5lc3MiOjEwLCJoZXgiOiIxNjE4MUQiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9LCIwLjUiOnsiaHVlIjotMSwic2F0dXJhdGlvbiI6LTEsImxpZ2h0bmVzcyI6OTgsImhleCI6IkY5RkFGQiIsInRleHRDb2xvciI6ImJsYWNrIn0sIjkuNSI6eyJodWUiOi0xLCJzYXR1cmF0aW9uIjotMSwibGlnaHRuZXNzIjo1LCJoZXgiOiIwQjBDMEYiLCJ0ZXh0Q29sb3IiOiJ3aGl0ZSJ9fQ%3D%3D
    */
   "frame": {
-    // ...defaultTailwindColors.gray
-    50: "#F9FAFB",
-    100: "#EDEFF2",
-    200: "#DFE2E7",
-    300: "#C7CCD6",
-    400: "#9BA4B6",
-    500: "#6C7993",
-    600: "#434B5B",
-    700: "#303541",
-    800: "#20242C",
-    900: "#0F1115",
-    950: "#090A0C"
+    ...defaultTailwindColors.gray,
+    // 50: '#F9FAFB',
+    // 100: '#F3F4F7',
+    // 200: '#E4E7EC',
+    // 300: '#D1D7E0',
+    // 400: '#9BA7BB',
+    // 500: '#6D798D',
+    // 600: '#465367',
+    // 700: '#363F4F',
+    // 800: '#252C37',
+    900: "#121b2b",
+    950: "#080D13"
   },
   primary: {
     50: "#E3F0FC",
@@ -119,14 +120,14 @@ var defaultTheme = {
     "--text-light": defaultColors.frame["100"],
     "--text-dark": defaultColors.frame["700"],
     "--bg-light": "#ffffff",
-    "--bg-dark": "#14161c",
-    // defaultColors.frame['900'],
+    "--bg-dark": defaultColors.frame["900"],
+    //'#242c38', // defaultColors.frame['900'], 
     "--bg-white": "#ffffff",
     "--body-text-light": defaultColors.frame["700"],
     "--body-text-dark": defaultColors.frame["100"],
     "--body-bg-light": "#ffffff",
-    "--body-bg-dark": "#14161c"
-    // defaultColors.frame['900'],
+    "--body-bg-dark": defaultColors.frame["900"]
+    // '#242c38', // defaultColors.frame['900']
   },
   colors: { ...defaultColors }
 };
@@ -199,7 +200,7 @@ function generateThemes(config) {
   }, {});
 }
 var aft = plugin.withOptions(
-  (config) => {
+  function createAft(config) {
     return (opts) => {
       const { addBase, addUtilities, matchUtilities, addComponents, theme } = opts;
       addBase({
@@ -293,7 +294,7 @@ var aft = plugin.withOptions(
       });
     };
   },
-  () => {
+  (arg1) => {
     return {
       theme: {
         extend: {
