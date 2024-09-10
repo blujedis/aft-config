@@ -249,22 +249,22 @@ var aft = plugin__default.default.withOptions(
       });
       addUtilities({
         // color of text in darkmode.
-        "body-text-dark": {
+        ".body-text-dark": {
           // color: `rgb(var(--body-text-dark))`
           color: `rgb(var(--text-light))`
         },
         // color of text in lightmode
-        "body-text-light": {
+        ".body-text-light": {
           // color: `rgb(var(--body-text-light))`
           color: `rgb(var(--text-dark))`
         },
         ".body-dark": {
           //'background-color': `rgb(var(--body-bg-dark))`
-          "background-color": `rgb(var(--bg-dark))`
+          backgroundColor: `rgb(var(--bg-dark))`
         },
         ".body-light": {
           //'background-color': `rgb(var(--body-bg-light))`
-          "background-color": `rgb(var(--bg-light))`
+          backgroundColor: `rgb(var(--bg-light))`
         },
         // dark color text = body-text-light
         ".text-dark": {
@@ -281,7 +281,34 @@ var aft = plugin__default.default.withOptions(
           lineHeight: "1.5"
         },
         ".small-caps": {
-          "font-variant": "all-small-caps"
+          fontVariant: "all-small-caps"
+        },
+        ".elevate-none": {
+          boxShadow: "none;"
+        },
+        ".elevate-xs": {
+          // .3, .15
+          boxShadow: "rgba(0, 0, 0, 0.08) 0px 1px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px;"
+        },
+        ".elevate-sm": {
+          // .3, .15
+          boxShadow: "rgba(60, 64, 67, 0.15) 0px 2px 3px, rgba(60, 64, 67, 0.11) 0px 2px 3px;"
+        },
+        ".elevate-md": {
+          // .16, .23
+          boxShadow: "rgba(0, 0, 0, 0.09) 0px 3px 6px, rgba(0, 0, 0, 0.14) 0px 3px 6px;"
+        },
+        ".elevate-lg": {
+          // .19, .23
+          boxShadow: "rgba(0, 0, 0, 0.11) 0px 5px 8px, rgba(0, 0, 0, 0.16) 0px 4px 6px;"
+        },
+        ".elevate-xl": {
+          // .25, .22
+          boxShadow: "rgba(0, 0, 0, 0.13) 0px 7px 9px, rgba(0, 0, 0, 0.17) 0px 7px 9px;"
+        },
+        ".elevate-xl2": {
+          // .3, .22
+          boxShadow: "rgba(0, 0, 0, 0.14) 0px 9px 11px, rgba(0, 0, 0, 0.15) 0px 9px 11px;"
         },
         ".fade-in-down": "fade-in-down .3s ease-out"
       });

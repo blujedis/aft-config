@@ -53,6 +53,7 @@
 		"url": "https://github.com/blujedis"
 	},
 	"dependencies": {
+		"mini-svg-data-uri": "^1.4.4",
 		"tailwindcss": "^3.4.1",
 		"tinycolor2": "^1.6.0"
 	},

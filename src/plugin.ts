@@ -1,5 +1,6 @@
 import tinycolor, { ColorInput } from 'tinycolor2';
 import plugin from 'tailwindcss/plugin';
+// import svgToDataUri from 'mini-svg-data-uri';
 import { defaultTheme } from './defaults';
 
 export type ThemeShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950
@@ -104,6 +105,18 @@ export const aft =
 
       const { addBase, addUtilities, matchUtilities, addComponents, theme } = opts;
 
+      // const caretColor = `rgb(var(--caret-color))`;
+      // const caret = {
+      //   'background-image': `url("${svgToDataUri(
+      //     `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="${caretColor}" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>`
+      //   )}")`
+      // };
+
+      // addComponents({
+      //   'select': caret,
+      //   '.form-select': caret
+      // })
+
       addBase({
 
         ...generateThemes(config),
@@ -151,22 +164,22 @@ export const aft =
 
       addUtilities({
         // color of text in darkmode.
-        'body-text-dark': {
+        '.body-text-dark': {
           // color: `rgb(var(--body-text-dark))`
           color: `rgb(var(--text-light))`
         },
         // color of text in lightmode
-        'body-text-light': {
+        '.body-text-light': {
           // color: `rgb(var(--body-text-light))`
           color: `rgb(var(--text-dark))`
         },
         '.body-dark': {
           //'background-color': `rgb(var(--body-bg-dark))`
-          'background-color': `rgb(var(--bg-dark))`
+          backgroundColor: `rgb(var(--bg-dark))`
         },
         '.body-light': {
           //'background-color': `rgb(var(--body-bg-light))`
-          'background-color': `rgb(var(--bg-light))`
+          backgroundColor: `rgb(var(--bg-light))`
         },
         // dark color text = body-text-light
         '.text-dark': {
@@ -183,9 +196,32 @@ export const aft =
           lineHeight: '1.5'
         },
         '.small-caps': {
-          'font-variant': 'all-small-caps'
+          fontVariant: 'all-small-caps'
         },
-        '.fade-in-down': 'fade-in-down .3s ease-out'
+
+        '.elevate-none': {
+          boxShadow: "none;"
+        },
+        '.elevate-xs': { // .3, .15
+          boxShadow: "rgba(0, 0, 0, 0.08) 0px 1px 2px, rgba(0, 0, 0, 0.05) 0px 1px 2px;"
+        },
+        '.elevate-sm': { // .3, .15
+          boxShadow: "rgba(60, 64, 67, 0.15) 0px 2px 3px, rgba(60, 64, 67, 0.11) 0px 2px 3px;"
+        },
+        '.elevate-md': { // .16, .23
+          boxShadow: "rgba(0, 0, 0, 0.09) 0px 3px 6px, rgba(0, 0, 0, 0.14) 0px 3px 6px;"
+        },
+        '.elevate-lg': { // .19, .23
+          boxShadow: "rgba(0, 0, 0, 0.11) 0px 5px 8px, rgba(0, 0, 0, 0.16) 0px 4px 6px;"
+        },
+        '.elevate-xl': { // .25, .22
+          boxShadow: "rgba(0, 0, 0, 0.13) 0px 7px 9px, rgba(0, 0, 0, 0.17) 0px 7px 9px;"
+        },
+        '.elevate-xl2': { // .3, .22
+          boxShadow: "rgba(0, 0, 0, 0.14) 0px 9px 11px, rgba(0, 0, 0, 0.15) 0px 9px 11px;"
+        },
+
+        '.fade-in-down': 'fade-in-down .3s ease-out',
       });
 
       matchUtilities({
@@ -203,6 +239,7 @@ export const aft =
       }, {
         values: { ...theme('animation'), 'fade-in-down': 'fade-in-down 0.3s ease-out' } as any
       });
+
 
     };
   },
