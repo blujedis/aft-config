@@ -162,12 +162,15 @@ function generateTailwindVars(colors, parent = "") {
   }, {});
 }
 function generateVariables(variables) {
-  return Object.entries(variables).reduce((result, [key, value]) => {
-    if (isHexRgbHslColor(value))
-      value = getRgbChannels(value);
-    result[key] = value;
-    return result;
-  }, {});
+  return Object.entries(variables).reduce(
+    (result, [key, value]) => {
+      if (isHexRgbHslColor(value))
+        value = getRgbChannels(value);
+      result[key] = value;
+      return result;
+    },
+    {}
+  );
 }
 function generateRootVars(colors, name = "") {
   return Object.keys(ensureDefault(colors)).reduce((result, shadeOrObj) => {
@@ -187,24 +190,27 @@ function mergeColors(colors, defaults) {
   return clone;
 }
 function generateThemes(config) {
-  return Object.entries(config).reduce((result, [key, theme]) => {
-    const { colors: c, variables: v, ...rest } = theme;
-    theme = {
-      name: key,
-      preprocess: "both",
-      colors: mergeColors(c, defaultTheme.colors),
-      // not deep merge only merges top level color key.
-      variables: { ...defaultTheme.variables, ...v },
-      ...rest
-    };
-    const variables = ["both", "variables"].includes(theme.preprocess || "") ? generateVariables(theme.variables) : theme.variables;
-    const colors = ["both", "colors"].includes(theme.preprocess || "") ? generateRootVars(theme.colors) : theme.colors;
-    result[`:root [data-theme='${theme.name}']`] = {
-      ...variables,
-      ...colors
-    };
-    return result;
-  }, {});
+  return Object.entries(config).reduce(
+    (result, [key, theme]) => {
+      const { colors: c, variables: v, ...rest } = theme;
+      theme = {
+        name: key,
+        preprocess: "both",
+        colors: mergeColors(c, defaultTheme.colors),
+        // not deep merge only merges top level color key.
+        variables: { ...defaultTheme.variables, ...v },
+        ...rest
+      };
+      const variables = ["both", "variables"].includes(theme.preprocess || "") ? generateVariables(theme.variables) : theme.variables;
+      const colors = ["both", "colors"].includes(theme.preprocess || "") ? generateRootVars(theme.colors) : theme.colors;
+      result[`:root [data-theme='${theme.name}']`] = {
+        ...variables,
+        ...colors
+      };
+      return result;
+    },
+    {}
+  );
 }
 var aft = plugin__default.default.withOptions(
   function createAft(config) {
@@ -304,20 +310,36 @@ var aft = plugin__default.default.withOptions(
         },
         ".fade-in-down": "fade-in-down .3s ease-out"
       });
-      matchUtilities({
-        brightness: (value) => ({
-          filter: `brightness(${value})`
-        })
-      }, {
-        values: { ...theme("brightness"), 80: ".80", 85: ".85", 102: "1.02", 115: "1.15", 135: "1.35" }
-      });
-      matchUtilities({
-        animate: (value) => ({
-          animation: value
-        })
-      }, {
-        values: { ...theme("animation"), "fade-in-down": "fade-in-down 0.3s ease-out" }
-      });
+      matchUtilities(
+        {
+          brightness: (value) => ({
+            filter: `brightness(${value})`
+          })
+        },
+        {
+          values: {
+            ...theme("brightness"),
+            80: ".80",
+            85: ".85",
+            102: "1.02",
+            115: "1.15",
+            135: "1.35"
+          }
+        }
+      );
+      matchUtilities(
+        {
+          animate: (value) => ({
+            animation: value
+          })
+        },
+        {
+          values: {
+            ...theme("animation"),
+            "fade-in-down": "fade-in-down 0.3s ease-out"
+          }
+        }
+      );
     };
   },
   (arg1) => {
