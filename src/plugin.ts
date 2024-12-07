@@ -1,6 +1,6 @@
 import tinycolor, { ColorInput } from 'tinycolor2';
 import plugin from 'tailwindcss/plugin';
-import { defaultTailwindColors, defaultTheme } from './defaults';
+import { defaultTheme } from './defaults';
 
 export type ThemeShade =
 	| 50
